@@ -1,0 +1,118 @@
+### 1. Create a New Person (Valid Input)
+POST http://localhost:8080/api/person
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "street": "Main Street",
+  "streetNumber": "123",
+  "zip": "12345",
+  "location": "Springfield",
+  "country": "USA"
+}
+
+### 2. Create Person (Missing First Name)
+POST http://localhost:8080/api/person
+Content-Type: application/json
+
+{
+  "firstName": "",
+  "lastName": "Doe",
+  "street": "Main Street",
+  "streetNumber": "123",
+  "zip": "12345",
+  "location": "Springfield",
+  "country": "USA"
+}
+### Expected: HTTP 400 response with message: "Name must not be null or empty"
+
+### 3. Create Person (Missing Last Name)
+POST http://localhost:8080/api/person
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "",
+  "street": "Main Street",
+  "streetNumber": "123",
+  "zip": "12345",
+  "location": "Springfield",
+  "country": "USA"
+}
+### Expected: HTTP 400 response with message: "Name must not be null or empty"
+
+### 4. Create Person (Invalid Street - Empty)
+POST http://localhost:8080/api/person
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "street": "",
+  "streetNumber": "123",
+  "zip": "12345",
+  "location": "Springfield",
+  "country": "USA"
+}
+### Expected: HTTP 400 response with message: "Street must not be null or empty"
+
+### 5. Create Person (Invalid Zip - Non-Numeric or Too Short)
+POST http://localhost:8080/api/person
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "street": "Main Street",
+  "streetNumber": "123",
+  "zip": "123",
+  "location": "Springfield",
+  "country": "USA"
+}
+### Expected: HTTP 400 response with message: "Zip must be a valid 5-digit number"
+
+### 6. Create Person (Invalid Country - Null)
+POST http://localhost:8080/api/person
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "street": "Main Street",
+  "streetNumber": "123",
+  "zip": "12345",
+  "location": "Springfield",
+  "country": ""
+}
+### Expected: HTTP 400 response with message: "Country must not be null or empty"
+
+### 7. Create Person (Invalid Location - Null)
+POST http://localhost:8080/api/person
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "street": "Main Street",
+  "streetNumber": "123",
+  "zip": "12345",
+  "location": "",
+  "country": "USA"
+}
+### Expected: HTTP 400 response with message: "Location must not be null or empty"
+
+### 8. Create Person (Invalid Street Number - Null)
+POST http://localhost:8080/api/person
+Content-Type: application/json
+
+{
+  "firstName": "John",
+  "lastName": "Doe",
+  "street": "Main Street",
+  "streetNumber": "",
+  "zip": "12345",
+  "location": "Springfield",
+  "country": "USA"
+}
+### Expected: HTTP 400 response with message: "Street number must not be null or empty"

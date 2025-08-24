@@ -1,11 +1,12 @@
-package com.codeartify.matching;
+package com.codeartify.overengineered;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MatchingApplication {
+public class OverengineeredApplication {
+
     public static void main(String[] args) {
-        SpringApplication.run(MatchingApplication.class, args);
+        SpringApplication.run(OverengineeredApplication.class, args);
     }
 }
