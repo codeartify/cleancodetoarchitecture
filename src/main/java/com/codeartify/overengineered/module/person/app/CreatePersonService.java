@@ -1,7 +1,11 @@
 package com.codeartify.overengineered.module.person.app;
 
+import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonCommand;
+import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonResult;
 import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonUseCase;
+import com.codeartify.overengineered.contract.person.port.outbound.PersonToStore;
 import com.codeartify.overengineered.contract.person.port.outbound.StorePerson;
+import com.codeartify.overengineered.contract.person.port.outbound.StoredPerson;
 import com.codeartify.overengineered.module.person.domain.*;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +21,25 @@ public class CreatePersonService implements CreatePersonUseCase {
 
     @Override
     public CreatePersonResult createPerson(CreatePersonCommand command) {
-        Person person = new Person(
+        Person person = toPerson(command);
+        var personToStore = toPersonToStore(person);
+        var createdPerson = storePerson.storePerson(personToStore);
+        return toResult(createdPerson);
+    }
+
+    private static CreatePersonResult toResult(StoredPerson createdPerson) {
+        return new CreatePersonResult(
+                createdPerson.firstName(),
+                createdPerson.lastName(),
+                createdPerson.street(),
+                createdPerson.streetNumber(),
+                createdPerson.zip(),
+                createdPerson.location(),
+                createdPerson.country());
+    }
+
+    private static Person toPerson(CreatePersonCommand command) {
+        return new Person(
                 new Names(
                         new Name(command.firstName()),
                         new Name(command.lastName())
@@ -30,16 +52,17 @@ public class CreatePersonService implements CreatePersonUseCase {
                         new Country(command.country())
                 )
         );
+    }
 
-        var createdPerson = storePerson.storePerson(person);
 
-        return new CreatePersonResult(
-                createdPerson.names().firstName().value(),
-                createdPerson.names().lastName().value(),
-                createdPerson.address().street().value(),
-                createdPerson.address().streetNumber().value(),
-                createdPerson.address().zip().value(),
-                createdPerson.address().location().value(),
-                createdPerson.address().country().value());
+    private static PersonToStore toPersonToStore(Person person) {
+        return new PersonToStore(
+                person.names().firstName().value(),
+                person.names().lastName().value(),
+                person.address().street().value(),
+                person.address().streetNumber().value(),
+                person.address().zip().value(),
+                person.address().location().value(),
+                person.address().country().value());
     }
 }
