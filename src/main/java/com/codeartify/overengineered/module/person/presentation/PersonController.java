@@ -1,7 +1,7 @@
 package com.codeartify.overengineered.module.person.presentation;
 
 import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonUseCase;
-import com.codeartify.overengineered.module.person.app.PersonCommand;
+import com.codeartify.overengineered.module.person.app.CreatePersonCommand;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +19,7 @@ public class PersonController {
 
     @PostMapping
     public PersonResponse createPerson(@RequestBody PersonRequest request) {
-        var personCommand = new PersonCommand(
+        var personCommand = new CreatePersonCommand(
                 request.firstName(),
                 request.lastName(),
                 request.street(),
@@ -32,12 +32,12 @@ public class PersonController {
         var createdPerson = createPersonUseCase.createPerson(personCommand);
 
         return new PersonResponse(
-                createdPerson.names().firstName().value(),
-                createdPerson.names().lastName().value(),
-                createdPerson.address().street().value(),
-                createdPerson.address().streetNumber().value(),
-                createdPerson.address().zip().value(),
-                createdPerson.address().location().value(),
-                createdPerson.address().country().value());
+                createdPerson.firstName(),
+                createdPerson.lastName(),
+                createdPerson.street(),
+                createdPerson.streetNumber(),
+                createdPerson.zip(),
+                createdPerson.location(),
+                createdPerson.country());
     }
 }

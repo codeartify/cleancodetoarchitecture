@@ -1,8 +1,8 @@
 package com.codeartify.overengineered.contract.person.port.inbound;
 
-import com.codeartify.overengineered.module.person.app.PersonCommand;
-import com.codeartify.overengineered.module.person.domain.Person;
+import com.codeartify.overengineered.module.person.app.CreatePersonCommand;
+import com.codeartify.overengineered.module.person.app.CreatePersonResult;
 
 public interface CreatePersonUseCase {
-    Person createPerson(PersonCommand command);
+    CreatePersonResult createPerson(CreatePersonCommand command);
 }

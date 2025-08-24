@@ -16,7 +16,7 @@ public class CreatePersonService implements CreatePersonUseCase {
     }
 
     @Override
-    public Person createPerson(PersonCommand command) {
+    public CreatePersonResult createPerson(CreatePersonCommand command) {
         Person person = new Person(
                 new Names(
                         new Name(command.firstName()),
@@ -31,6 +31,15 @@ public class CreatePersonService implements CreatePersonUseCase {
                 )
         );
 
-        return storePerson.storePerson(person);
+        var createdPerson = storePerson.storePerson(person);
+
+        return new CreatePersonResult(
+                createdPerson.names().firstName().value(),
+                createdPerson.names().lastName().value(),
+                createdPerson.address().street().value(),
+                createdPerson.address().streetNumber().value(),
+                createdPerson.address().zip().value(),
+                createdPerson.address().location().value(),
+                createdPerson.address().country().value());
     }
 }
