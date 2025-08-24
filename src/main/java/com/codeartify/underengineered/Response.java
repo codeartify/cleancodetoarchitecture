@@ -1,4 +1,4 @@
-package com.codeartify.primitive;
+package com.codeartify.underengineered;
 
 public record Response(int numberOfContainedPoints) {
 }
