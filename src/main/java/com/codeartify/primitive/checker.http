@@ -1,0 +1,95 @@
+### Valid input: All points inside the circle
+POST http://localhost:8080/api/primitive/checkContainment
+Content-Type: application/json
+
+{
+  "xCoords": [1, 2, 3],
+  "yCoords": [1, 2, 3],
+  "x": 0,
+  "y": 0,
+  "r": 5
+}
+
+### Valid input: Some points inside, some outside the circle
+POST http://localhost:8080/api/primitive/checkContainment
+Content-Type: application/json
+
+{
+  "xCoords": [1, 10, 3],
+  "yCoords": [1, 15, 3],
+  "x": 0,
+  "y": 0,
+  "r": 5
+}
+
+### Valid input: No points inside the circle
+POST http://localhost:8080/api/primitive/checkContainment
+Content-Type: application/json
+
+{
+  "xCoords": [10, 20, 30],
+  "yCoords": [10, 20, 30],
+  "x": 0,
+  "y": 0,
+  "r": 5
+}
+
+### Invalid input: xCoords is null
+POST http://localhost:8080/api/primitive/checkContainment
+Content-Type: application/json
+
+{
+  "xCoords": null,
+  "yCoords": [1, 2, 3],
+  "x": 0,
+  "y": 0,
+  "r": 5
+}
+
+### Invalid input: xCoords is empty
+POST http://localhost:8080/api/primitive/checkContainment
+Content-Type: application/json
+
+{
+  "xCoords": [],
+  "yCoords": [1, 2, 3],
+  "x": 0,
+  "y": 0,
+  "r": 5
+}
+
+### Invalid input: yCoords is null
+POST http://localhost:8080/api/primitive/checkContainment
+Content-Type: application/json
+
+{
+  "xCoords": [1, 2, 3],
+  "yCoords": null,
+  "x": 0,
+  "y": 0,
+  "r": 5
+}
+
+### Invalid input: yCoords is empty
+POST http://localhost:8080/api/primitive/checkContainment
+Content-Type: application/json
+
+{
+  "xCoords": [1, 2, 3],
+  "yCoords": [],
+  "x": 0,
+  "y": 0,
+  "r": 5
+}
+
+### Invalid input: xCoords and yCoords sizes do not match
+POST http://localhost:8080/api/primitive/checkContainment
+Content-Type: application/json
+
+{
+  "xCoords": [1, 2],
+  "yCoords": [1, 2, 3],
+  "x": 0,
+  "y": 0,
+  "r": 5
+}
