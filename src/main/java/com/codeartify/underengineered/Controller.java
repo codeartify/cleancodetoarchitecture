@@ -1,4 +1,4 @@
-package com.codeartify.primitive;
+package com.codeartify.underengineered;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
