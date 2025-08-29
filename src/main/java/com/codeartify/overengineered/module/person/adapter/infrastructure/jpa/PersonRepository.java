@@ -1,4 +1,4 @@
-package com.codeartify.overengineered.module.person.infrastructure;
+package com.codeartify.overengineered.module.person.adapter.infrastructure.jpa;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

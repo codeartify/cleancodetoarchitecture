@@ -1,17 +1,14 @@
-package com.codeartify.overengineered.module.person.presentation;
+package com.codeartify.overengineered.module.person.adapter.presentation.http;
 
-import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonUseCase;
-import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonCommand;
-import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonResult;
 import com.codeartify.overengineered.contract.person.api.PersonRequest;
 import com.codeartify.overengineered.contract.person.api.PersonResponse;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonCommand;
+import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonResult;
+import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonUseCase;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/person")
+@RequestMapping("/api/persons")
 public class PersonController {
 
     private final CreatePersonUseCase createPersonUseCase;
@@ -24,9 +21,14 @@ public class PersonController {
     public PersonResponse createPerson(@RequestBody PersonRequest request) {
         var personCommand = toCreatePersonCommand(request);
 
-        var createdPerson = createPersonUseCase.createPerson(personCommand);
+        var createdPersonResult = createPersonUseCase.createPerson(personCommand);
 
-        return toPersonResponse(createdPerson);
+        return toPersonResponse(createdPersonResult);
+    }
+
+    @GetMapping(value = "/{id}")
+    public PersonResponse getPerson(@PathVariable("id") String id) {
+        throw new UnsupportedOperationException("implement a simple getter that queries the database for a person with a given ID (%s).\nMake sure to run ArchitectureTest. All tests should pass.".formatted(id));
     }
 
     private static CreatePersonCommand toCreatePersonCommand(PersonRequest request) {
@@ -43,6 +45,7 @@ public class PersonController {
 
     private static PersonResponse toPersonResponse(CreatePersonResult createdPerson) {
         return new PersonResponse(
+                createdPerson.id(),
                 createdPerson.firstName(),
                 createdPerson.lastName(),
                 createdPerson.street(),

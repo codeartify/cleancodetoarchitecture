@@ -7,7 +7,10 @@ import com.codeartify.overengineered.contract.person.port.outbound.PersonToStore
 import com.codeartify.overengineered.contract.person.port.outbound.StorePerson;
 import com.codeartify.overengineered.contract.person.port.outbound.StoredPerson;
 import com.codeartify.overengineered.module.person.domain.*;
-import org.springframework.stereotype.Service;
+ import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.UUID;
 
 
 @Service
@@ -20,6 +23,7 @@ public class CreatePersonService implements CreatePersonUseCase {
     }
 
     @Override
+    @Transactional
     public CreatePersonResult createPerson(CreatePersonCommand command) {
         Person person = toPerson(command);
         var personToStore = toPersonToStore(person);
@@ -27,15 +31,16 @@ public class CreatePersonService implements CreatePersonUseCase {
         return toResult(createdPerson);
     }
 
-    private static CreatePersonResult toResult(StoredPerson createdPerson) {
+    private static CreatePersonResult toResult(StoredPerson storedPerson) {
         return new CreatePersonResult(
-                createdPerson.firstName(),
-                createdPerson.lastName(),
-                createdPerson.street(),
-                createdPerson.streetNumber(),
-                createdPerson.zip(),
-                createdPerson.location(),
-                createdPerson.country());
+                storedPerson.id(),
+                storedPerson.firstName(),
+                storedPerson.lastName(),
+                storedPerson.street(),
+                storedPerson.streetNumber(),
+                storedPerson.zip(),
+                storedPerson.location(),
+                storedPerson.country());
     }
 
     private static Person toPerson(CreatePersonCommand command) {
@@ -57,6 +62,7 @@ public class CreatePersonService implements CreatePersonUseCase {
 
     private static PersonToStore toPersonToStore(Person person) {
         return new PersonToStore(
+                UUID.randomUUID().toString(),
                 person.names().firstName().value(),
                 person.names().lastName().value(),
                 person.address().street().value(),

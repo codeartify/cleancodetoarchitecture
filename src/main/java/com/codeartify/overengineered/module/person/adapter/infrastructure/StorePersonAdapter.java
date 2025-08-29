@@ -1,11 +1,11 @@
-package com.codeartify.overengineered.module.person.adapter;
+package com.codeartify.overengineered.module.person.adapter.infrastructure;
 
 
 import com.codeartify.overengineered.contract.person.port.outbound.PersonToStore;
 import com.codeartify.overengineered.contract.person.port.outbound.StorePerson;
 import com.codeartify.overengineered.contract.person.port.outbound.StoredPerson;
-import com.codeartify.overengineered.module.person.infrastructure.PersonEntity;
-import com.codeartify.overengineered.module.person.infrastructure.PersonRepository;
+import com.codeartify.overengineered.module.person.adapter.infrastructure.jpa.PersonEntity;
+import com.codeartify.overengineered.module.person.adapter.infrastructure.jpa.PersonRepository;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -28,6 +28,7 @@ public class StorePersonAdapter implements StorePerson {
 
     private static StoredPerson toStoredPerson(PersonEntity entity) {
         return new StoredPerson(
+                entity.getId(),
                 entity.getFirstName(),
                 entity.getLastName(),
                 entity.getStreet(),
@@ -40,6 +41,7 @@ public class StorePersonAdapter implements StorePerson {
 
     private static PersonEntity toPersonEntity(PersonToStore person) {
         PersonEntity entity = new PersonEntity();
+        entity.setId(person.id());
         entity.setFirstName(person.firstName());
         entity.setLastName(person.lastName());
         entity.setStreet(person.street());
