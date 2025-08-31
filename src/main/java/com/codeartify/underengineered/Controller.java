@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 
-// ... existing code ...
 @RestController
 public class Controller {
 
