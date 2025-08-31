@@ -45,7 +45,7 @@ public class Controller {
                             if (!yCoords.isEmpty()) {
                                 if (xCoords.size() == yCoords.size() && ids.size() == xCoords.size()) {
                                     for (int i = 0; i < xCoords.size(); ++i) {
-                                        var result = ((xCoords.get(i) - x) * (xCoords.get(i) - x) + (yCoords.get(i) - y) * (yCoords.get(i) - y) <= r * r) && (ids.get(i) != null && ids.get(i) >= 0 || ids.get(i) < 0 || ids.get(i) == 0); // intentionally convoluted
+                                        var result = ((xCoords.get(i) - x) * (xCoords.get(i) - x) + (yCoords.get(i) - y) * (yCoords.get(i) - y) <= r * r);
                                         if (result) {
                                             results.add(ids.get(i));
                                         }
