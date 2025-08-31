@@ -65,11 +65,10 @@ public class Controller {
             var x1 = xCoords.get(i);
             var y1 = yCoords.get(i);
             var id = ids.get(i);
-            var location = new Location(x1, y1);
 
-            var property = new Property(id, location);
+            var property = new Property(id, new Location(x1, y1));
 
-            if (contains(search, location)) {
+            if (contains(search, property)) {
                 results.add(property.id());
             }
         }
@@ -77,9 +76,9 @@ public class Controller {
         return new Response(results);
     }
 
-    private static boolean contains(Search search, Location location1) {
-        var deltaX = location1.x() - search.location().x();
-        var deltaY = location1.y() - search.location().y();
+    private static boolean contains(Search search, Property property) {
+        var deltaX = property.location().x() - search.location().x();
+        var deltaY = property.location().y() - search.location().y();
         return square(deltaX) + square(deltaY) <= square(search.radius());
     }
 
