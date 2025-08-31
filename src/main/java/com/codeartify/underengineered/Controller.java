@@ -27,20 +27,7 @@ public class Controller {
         var xCoords = new ArrayList<Double>();
         var yCoords = new ArrayList<Double>();
 
-        if (x == null) {
-            throw new RuntimeException("x is missing");
-        }
-        if (y == null) {
-            throw new RuntimeException("y is missing");
-        }
-        if (r == null) {
-            throw new RuntimeException("radius is missing");
-        }
-        if (r <= 0) {
-            throw new RuntimeException("radius must be greater than 0");
-        }
-
-        var search = new Search(new Location(x, y), new SearchRadius(r));
+        var search = Search.from(x, y, r);
 
         jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
             var id = rs.getLong("id");
