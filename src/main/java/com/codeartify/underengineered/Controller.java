@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 
-// ... existing code ...
 @RestController
 public class Controller {
 
@@ -28,48 +27,43 @@ public class Controller {
         var xCoords = new ArrayList<Double>();
         var yCoords = new ArrayList<Double>();
 
-        if (x != null) {
-            if (y != null) {
-                if (r != null) {
-                    if (!(r <= 0)) {
-                        jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
-                            var id = rs.getLong("id");
-                            var xx = rs.getDouble("x");
-                            var yy = rs.getDouble("y");
-                            ids.add(id);
-                            xCoords.add(xx);
-                            yCoords.add(yy);
-                        });
-
-                        if (!xCoords.isEmpty()) {
-                            if (!yCoords.isEmpty()) {
-                                if (xCoords.size() == yCoords.size() && ids.size() == xCoords.size()) {
-                                    for (int i = 0; i < xCoords.size(); ++i) {
-                                        var result = ((xCoords.get(i) - x) * (xCoords.get(i) - x) + (yCoords.get(i) - y) * (yCoords.get(i) - y) <= r * r);
-                                        if (result) {
-                                            results.add(ids.get(i));
-                                        }
-                                    }
-                                } else {
-                                    throw new Exception("Not every provided x coordinate has a matching y coordinate");
-                                }
-                            } else {
-                                throw new Exception("y coordinates are empty");
-                            }
-                        } else {
-                            throw new Exception("x coordinates are empty");
-                        }
-                    } else {
-                        throw new RuntimeException("radius must be greater than 0");
-                    }
-                } else {
-                    throw new RuntimeException("radius is missing");
-                }
-            } else {
-                throw new RuntimeException("y is missing");
-            }
-        } else {
+        if (x == null) {
             throw new RuntimeException("x is missing");
+        }
+        if (y == null) {
+            throw new RuntimeException("y is missing");
+        }
+        if (r == null) {
+            throw new RuntimeException("radius is missing");
+        }
+        if (r <= 0) {
+            throw new RuntimeException("radius must be greater than 0");
+        }
+
+        jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
+            var id = rs.getLong("id");
+            var xx = rs.getDouble("x");
+            var yy = rs.getDouble("y");
+            ids.add(id);
+            xCoords.add(xx);
+            yCoords.add(yy);
+        });
+
+        if (xCoords.isEmpty()) {
+            throw new Exception("x coordinates are empty");
+        }
+        if (yCoords.isEmpty()) {
+            throw new Exception("y coordinates are empty");
+        }
+        if (xCoords.size() != yCoords.size() || ids.size() != xCoords.size()) {
+            throw new Exception("Not every provided x coordinate has a matching y coordinate");
+        }
+
+        for (int i = 0; i < xCoords.size(); ++i) {
+            var result = ((xCoords.get(i) - x) * (xCoords.get(i) - x) + (yCoords.get(i) - y) * (yCoords.get(i) - y) <= r * r);
+            if (result) {
+                results.add(ids.get(i));
+            }
         }
 
         return new Response(results);
