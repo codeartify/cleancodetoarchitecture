@@ -68,22 +68,12 @@ public class Controller {
 
             var property = new Property(id, new Location(x1, y1));
 
-            if (contains(search, property)) {
+            if (search.contains(property)) {
                 results.add(property.id());
             }
         }
 
         return new Response(results);
-    }
-
-    private static boolean contains(Search search, Property property) {
-        var deltaX = property.location().x() - search.searchLocation().x();
-        var deltaY = property.location().y() - search.searchLocation().y();
-        return square(deltaX) + square(deltaY) <= square(search.searchRadius().value());
-    }
-
-    private static double square(double value) {
-        return value * value;
     }
 
 }
