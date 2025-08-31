@@ -13,15 +13,10 @@ public class GlobalExceptionHandler {
         return e.getMessage();
     }
 
-    @ExceptionHandler(Throwable.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleGeneric(Throwable e) {
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleGeneric(Exception e) {
         return e.getMessage();
     }
 
-    @ExceptionHandler(UnsupportedOperationException.class)
-    @ResponseStatus(HttpStatus.NOT_IMPLEMENTED)
-    public String handleUnsupportedOperationException(Throwable e) {
-        return e.getMessage();
-    }
 }

@@ -1,4 +1,6 @@
 package com.codeartify.underengineered;
 
-public record Response(int numberOfContainedPoints) {
+import java.util.List;
+
+public record Response(List<Long> result) {
 }
