@@ -1,23 +1,25 @@
 package com.codeartify.underengineered.application;
 
-import com.codeartify.underengineered.domain.Search;
-import com.codeartify.underengineered.adapter.data_access.PropertyRepository;
+import com.codeartify.underengineered.application.port.inbound.SearchProperties;
+import com.codeartify.underengineered.application.port.outbound.FindProperties;
+import com.codeartify.underengineered.domain.PropertySearch;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class PropertySearchService {
-    private final PropertyRepository propertyRepository;
+public class PropertySearchService implements SearchProperties {
+    private final FindProperties findProperties;
 
-    public PropertySearchService(PropertyRepository propertyRepository) {
-        this.propertyRepository = propertyRepository;
+    public PropertySearchService(FindProperties findProperties) {
+        this.findProperties = findProperties;
     }
 
+    @Override
     public List<Long> execute(Double x, Double y, Double r) throws Exception {
-        var search = Search.from(x, y, r);
+        var search = PropertySearch.from(x, y, r);
 
-        var properties = this.propertyRepository.findAll();
+        var properties = this.findProperties.findAll();
 
         return search.findContained(properties);
     }

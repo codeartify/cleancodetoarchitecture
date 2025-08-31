@@ -4,7 +4,7 @@ import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
-public record Search(Location searchLocation, SearchRadius searchRadius) {
+public record PropertySearch(Location searchLocation, SearchRadius searchRadius) {
     public List<Long> findContained(List<Property> properties) {
         return properties.stream()
                 .filter(this::contains)
@@ -16,8 +16,8 @@ public record Search(Location searchLocation, SearchRadius searchRadius) {
         return value * value;
     }
 
-    public static Search from(Double x, Double y, Double searchRadius) {
-        return new Search(new Location(x, y), new SearchRadius(searchRadius));
+    public static PropertySearch from(Double x, Double y, Double searchRadius) {
+        return new PropertySearch(new Location(x, y), new SearchRadius(searchRadius));
     }
 
     boolean contains(Property property) {

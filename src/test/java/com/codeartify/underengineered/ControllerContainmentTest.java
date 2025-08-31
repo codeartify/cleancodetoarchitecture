@@ -4,6 +4,7 @@ import com.codeartify.underengineered.adapter.data_access.PropertyRepository;
 import com.codeartify.underengineered.adapter.presentation.PropertySearchController;
 import com.codeartify.underengineered.adapter.presentation.Response;
 import com.codeartify.underengineered.application.PropertySearchService;
+import com.codeartify.underengineered.application.port.outbound.FindProperties;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,8 +32,8 @@ class ControllerTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate = mock(JdbcTemplate.class);
-        final PropertyRepository propertyRepository = new PropertyRepository(jdbcTemplate);
-        controller = new PropertySearchController(new PropertySearchService(propertyRepository));
+        final FindProperties findProperties = new PropertyRepository(jdbcTemplate);
+        controller = new PropertySearchController(new PropertySearchService(findProperties));
     }
 
     // --- Missing parameter guards ---

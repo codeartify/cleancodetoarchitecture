@@ -1,5 +1,6 @@
 package com.codeartify.underengineered.adapter.data_access;
 
+import com.codeartify.underengineered.application.port.outbound.FindProperties;
 import com.codeartify.underengineered.domain.Location;
 import com.codeartify.underengineered.domain.Property;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,13 +13,14 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.toList;
 
 @Repository
-public class PropertyRepository {
+public class PropertyRepository implements FindProperties {
     private final JdbcTemplate jdbcTemplate;
 
     public PropertyRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
+    @Override
     public List<Property> findAll() throws Exception {
         var ids = new ArrayList<Long>();
         var xCoords = new ArrayList<Double>();
