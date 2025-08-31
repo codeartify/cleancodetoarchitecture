@@ -18,9 +18,11 @@ public class Controller {
     }
 
     @GetMapping("/api/realestate")
-    public Response checkContainment(@RequestParam(required = false) Double x,
-                                     @RequestParam(required = false) Double y,
-                                     @RequestParam(required = false) Double r) throws Exception {
+    public Response checkContainment(
+            @RequestParam(name = "x", required = false) Double x,
+            @RequestParam(name = "y", required = false) Double y,
+            @RequestParam(name = "r", required = false) Double r)
+            throws Exception {
 
         var ids = new ArrayList<Long>();
         var results = new ArrayList<Long>();
