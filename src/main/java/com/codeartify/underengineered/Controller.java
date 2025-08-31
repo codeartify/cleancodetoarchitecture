@@ -40,6 +40,8 @@ public class Controller {
             throw new RuntimeException("radius must be greater than 0");
         }
 
+        var search = new Search(new Location(x, y), r);
+
         jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
             var id = rs.getLong("id");
             var xx = rs.getDouble("x");
@@ -62,18 +64,23 @@ public class Controller {
         for (int i = 0; i < xCoords.size(); ++i) {
             var x1 = xCoords.get(i);
             var y1 = yCoords.get(i);
-            if (contains(x, y, r, x1, y1)) {
-                results.add(ids.get(i));
+            var id = ids.get(i);
+            var location = new Location(x1, y1);
+
+            var property = new Property(id, location);
+
+            if (contains(search, location)) {
+                results.add(property.id());
             }
         }
 
         return new Response(results);
     }
 
-    private static boolean contains(Double x, Double y, Double radius, Double x1, Double y1) {
-        var deltaX = x1 - x;
-        var deltaY = y1 - y;
-        return square(deltaX) + square(deltaY) <= square(radius);
+    private static boolean contains(Search search, Location location1) {
+        var deltaX = location1.x() - search.location().x();
+        var deltaY = location1.y() - search.location().y();
+        return square(deltaX) + square(deltaY) <= square(search.radius());
     }
 
     private static double square(double value) {
