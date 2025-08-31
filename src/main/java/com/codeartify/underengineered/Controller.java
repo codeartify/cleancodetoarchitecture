@@ -15,10 +15,10 @@ public class Controller {
     }
 
     @GetMapping("/api/realestate")
-    public Response checkContainment(@RequestParam(required = false) Double x,
+    public Response searchProperties(@RequestParam(required = false) Double x,
                                      @RequestParam(required = false) Double y,
                                      @RequestParam(required = false) Double r) throws Exception {
-        var search = Search.from(x, y, r);
+        var search = PropertySearch.from(x, y, r);
 
         var properties = propertyRepository.findAll();
 
