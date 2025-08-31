@@ -40,7 +40,7 @@ public class Controller {
             throw new RuntimeException("radius must be greater than 0");
         }
 
-        var search = new Search(new Location(x, y), r);
+        var search = new Search(new Location(x, y), new SearchRadius(r));
 
         jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
             var id = rs.getLong("id");
@@ -77,9 +77,9 @@ public class Controller {
     }
 
     private static boolean contains(Search search, Property property) {
-        var deltaX = property.location().x() - search.location().x();
-        var deltaY = property.location().y() - search.location().y();
-        return square(deltaX) + square(deltaY) <= square(search.radius());
+        var deltaX = property.location().x() - search.searchLocation().x();
+        var deltaY = property.location().y() - search.searchLocation().y();
+        return square(deltaX) + square(deltaY) <= square(search.searchRadius().value());
     }
 
     private static double square(double value) {
