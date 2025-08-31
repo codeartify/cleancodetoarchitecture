@@ -60,13 +60,24 @@ public class Controller {
         }
 
         for (int i = 0; i < xCoords.size(); ++i) {
-            var result = ((xCoords.get(i) - x) * (xCoords.get(i) - x) + (yCoords.get(i) - y) * (yCoords.get(i) - y) <= r * r);
-            if (result) {
+            var x1 = xCoords.get(i);
+            var y1 = yCoords.get(i);
+            if (contains(x, y, r, x1, y1)) {
                 results.add(ids.get(i));
             }
         }
 
         return new Response(results);
+    }
+
+    private static boolean contains(Double x, Double y, Double radius, Double x1, Double y1) {
+        var deltaX = x1 - x;
+        var deltaY = y1 - y;
+        return square(deltaX) + square(deltaY) <= square(radius);
+    }
+
+    private static double square(double value) {
+        return value * value;
     }
 
 }
