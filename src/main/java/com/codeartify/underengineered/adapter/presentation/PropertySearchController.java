@@ -16,11 +16,13 @@ public class PropertySearchController {
     }
 
     @GetMapping("/api/realestate")
-    public Response checkContainment(@RequestParam(required = false) Double x,
-                                     @RequestParam(required = false) Double y,
-                                     @RequestParam(required = false) Double r) throws Exception {
+    public Response searchProperties(
+            @RequestParam(name = "x", required = false) Double x,
+            @RequestParam(name = "y", required = false) Double y,
+            @RequestParam(name = "r", required = false) Double radius)
+            throws Exception {
 
-        var results = propertySearchService.execute(x, y, r);
+        var results = propertySearchService.execute(x, y, radius);
 
         return new Response(results);
     }
