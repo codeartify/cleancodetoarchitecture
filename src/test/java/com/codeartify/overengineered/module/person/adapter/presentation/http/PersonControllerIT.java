@@ -1,6 +1,5 @@
 package com.codeartify.overengineered.module.person.adapter.presentation.http;
 
-import com.codeartify.overengineered.GlobalExceptionHandler;
 import com.codeartify.overengineered.contract.person.api.PersonRequest;
 import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonUseCase;
 import com.codeartify.overengineered.contract.person.port.outbound.presenter.PresentablePerson;
