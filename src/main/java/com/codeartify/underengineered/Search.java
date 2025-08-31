@@ -1,6 +1,17 @@
 package com.codeartify.underengineered;
 
+import java.util.List;
+
+import static java.util.stream.Collectors.toList;
+
 public record Search(Location searchLocation, SearchRadius searchRadius) {
+    List<Long> findContained(List<Property> properties) {
+        return properties.stream()
+                .filter(this::contains)
+                .map(Property::id)
+                .collect(toList());
+    }
+
     static double square(double value) {
         return value * value;
     }

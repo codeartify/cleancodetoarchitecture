@@ -27,7 +27,7 @@ class ControllerTest {
     @BeforeEach
     void setUp() {
         jdbcTemplate = mock(JdbcTemplate.class);
-        controller = new Controller(jdbcTemplate);
+        controller = new Controller(new PropertyRepository(jdbcTemplate));
     }
 
     // --- Missing parameter guards ---
