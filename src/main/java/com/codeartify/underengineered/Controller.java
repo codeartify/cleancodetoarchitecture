@@ -27,7 +27,7 @@ public class Controller {
         var xCoords = new ArrayList<Double>();
         var yCoords = new ArrayList<Double>();
 
-        var search = Search.from(x, y, r);
+        var search = PropertySearch.from(x, y, r);
 
         jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
             var id = rs.getLong("id");

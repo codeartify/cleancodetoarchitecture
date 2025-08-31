@@ -1,12 +1,12 @@
 package com.codeartify.underengineered;
 
-public record Search(Location searchLocation, SearchRadius searchRadius) {
+public record PropertySearch(Location searchLocation, SearchRadius searchRadius) {
     static double square(double value) {
         return value * value;
     }
 
-    static Search from(Double x, Double y, Double searchRadius) {
-        return new Search(new Location(x, y), new SearchRadius(searchRadius));
+    static PropertySearch from(Double x, Double y, Double searchRadius) {
+        return new PropertySearch(new Location(x, y), new SearchRadius(searchRadius));
     }
 
     boolean contains(Property property) {
