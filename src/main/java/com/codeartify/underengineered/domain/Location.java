@@ -1,4 +1,4 @@
-package com.codeartify.underengineered;
+package com.codeartify.underengineered.domain;
 
 public record Location(Double x, Double y) {
     public Location {

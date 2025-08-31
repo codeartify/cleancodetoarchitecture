@@ -1,28 +1,26 @@
-package com.codeartify.underengineered;
+package com.codeartify.underengineered.adapter.presentation;
 
 
+import com.codeartify.underengineered.application.PropertySearchService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class Controller {
+public class PropertySearchController {
 
-    private final PropertyRepository propertyRepository;
+     private final PropertySearchService propertySearchService;
 
-    public Controller(PropertyRepository propertyRepository) {
-        this.propertyRepository = propertyRepository;
+    public PropertySearchController(PropertySearchService propertySearchService) {
+         this.propertySearchService = propertySearchService;
     }
 
     @GetMapping("/api/realestate")
     public Response checkContainment(@RequestParam(required = false) Double x,
                                      @RequestParam(required = false) Double y,
                                      @RequestParam(required = false) Double r) throws Exception {
-        var search = Search.from(x, y, r);
 
-        var properties = propertyRepository.findAll();
-
-        var results = search.findContained(properties);
+        var results = propertySearchService.execute(x, y, r);
 
         return new Response(results);
     }

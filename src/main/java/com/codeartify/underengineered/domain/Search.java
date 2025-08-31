@@ -1,11 +1,11 @@
-package com.codeartify.underengineered;
+package com.codeartify.underengineered.domain;
 
 import java.util.List;
 
 import static java.util.stream.Collectors.toList;
 
 public record Search(Location searchLocation, SearchRadius searchRadius) {
-    List<Long> findContained(List<Property> properties) {
+    public List<Long> findContained(List<Property> properties) {
         return properties.stream()
                 .filter(this::contains)
                 .map(Property::id)
@@ -16,7 +16,7 @@ public record Search(Location searchLocation, SearchRadius searchRadius) {
         return value * value;
     }
 
-    static Search from(Double x, Double y, Double searchRadius) {
+    public static Search from(Double x, Double y, Double searchRadius) {
         return new Search(new Location(x, y), new SearchRadius(searchRadius));
     }
 

@@ -1,4 +1,4 @@
-package com.codeartify.underengineered;
+package com.codeartify.underengineered.infrastructure;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

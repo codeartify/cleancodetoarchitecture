@@ -1,5 +1,9 @@
 package com.codeartify.underengineered;
 
+import com.codeartify.underengineered.adapter.data_access.PropertyRepository;
+import com.codeartify.underengineered.adapter.presentation.PropertySearchController;
+import com.codeartify.underengineered.adapter.presentation.Response;
+import com.codeartify.underengineered.application.PropertySearchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,12 +26,13 @@ import static org.mockito.Mockito.mock;
 class ControllerTest {
 
     private JdbcTemplate jdbcTemplate;
-    private Controller controller;
+    private PropertySearchController controller;
 
     @BeforeEach
     void setUp() {
         jdbcTemplate = mock(JdbcTemplate.class);
-        controller = new Controller(new PropertyRepository(jdbcTemplate));
+        final PropertyRepository propertyRepository = new PropertyRepository(jdbcTemplate);
+        controller = new PropertySearchController(new PropertySearchService(propertyRepository));
     }
 
     // --- Missing parameter guards ---

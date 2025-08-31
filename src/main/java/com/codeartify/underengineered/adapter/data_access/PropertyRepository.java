@@ -1,5 +1,7 @@
-package com.codeartify.underengineered;
+package com.codeartify.underengineered.adapter.data_access;
 
+import com.codeartify.underengineered.domain.Location;
+import com.codeartify.underengineered.domain.Property;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +19,7 @@ public class PropertyRepository {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    List<Property> findAll() throws Exception {
+    public List<Property> findAll() throws Exception {
         var ids = new ArrayList<Long>();
         var xCoords = new ArrayList<Double>();
         var yCoords = new ArrayList<Double>();
