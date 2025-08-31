@@ -39,21 +39,21 @@ class ControllerTest {
 
     @Test
     void should_fail_when_x_is_missing() {
-        assertThatThrownBy(() -> controller.checkContainment(null, 0.0, 1.0))
+        assertThatThrownBy(() -> controller.searchProperties(null, 0.0, 1.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("x is missing");
     }
 
     @Test
     void should_fail_when_y_is_missing() {
-        assertThatThrownBy(() -> controller.checkContainment(0.0, null, 1.0))
+        assertThatThrownBy(() -> controller.searchProperties(0.0, null, 1.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("y is missing");
     }
 
     @Test
     void should_fail_when_r_is_missing() {
-        assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, null))
+        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, null))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("radius is missing");
     }
@@ -62,14 +62,14 @@ class ControllerTest {
 
     @Test
     void should_reject_radius_zero() {
-        assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, 0.0))
+        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 0.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("radius must be greater than 0");
     }
 
     @Test
     void should_reject_radius_negative() {
-        assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, -1.0))
+        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, -1.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("radius must be greater than 0");
     }
@@ -83,7 +83,7 @@ class ControllerTest {
                 .when(jdbcTemplate)
                 .query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
 
-        assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, 5.0))
+        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 5.0))
                 .isInstanceOf(Exception.class)
                 .hasMessage("x coordinates are empty");
     }
@@ -94,7 +94,7 @@ class ControllerTest {
                 .when(jdbcTemplate)
                 .query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
 
-        assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, 5.0))
+        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 5.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("DB down");
     }
@@ -119,7 +119,7 @@ class ControllerTest {
             return null;
         }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
 
-        assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, 5.0))
+        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 5.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("boom on y");
     }
@@ -150,7 +150,7 @@ class ControllerTest {
             return null;
         }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
 
-        assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, 5.0))
+        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 5.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("row2 y failed");
     }
@@ -166,7 +166,7 @@ class ControllerTest {
         };
         stubRows(rows);
 
-        Response response = controller.checkContainment(0.0, 0.0, 5.0);
+        Response response = controller.searchProperties(0.0, 0.0, 5.0);
         assertThat(response.result()).containsExactly(1L);
     }
 
@@ -178,7 +178,7 @@ class ControllerTest {
         };
         stubRows(rows);
 
-        Response response = controller.checkContainment(0.0, 0.0, 5.0);
+        Response response = controller.searchProperties(0.0, 0.0, 5.0);
         assertThat(response.result()).isEmpty();
     }
 
@@ -194,7 +194,7 @@ class ControllerTest {
         };
         stubRows(rows);
 
-        Response response = controller.checkContainment(0.0, 0.0, 5.0);
+        Response response = controller.searchProperties(0.0, 0.0, 5.0);
 
         List<Long> ids = response.result();
         assertThat(ids).containsExactlyInAnyOrder(1L, 2L, 3L, 5L);
@@ -213,11 +213,11 @@ class ControllerTest {
         stubRows(rows);
 
         // Near origin
-        Response nearOrigin = controller.checkContainment(0.0, 0.0, 2.0);
+        Response nearOrigin = controller.searchProperties(0.0, 0.0, 2.0);
         assertThat(nearOrigin.result()).containsExactlyInAnyOrder(0L, 7L);
 
         // Near (10,10)
-        Response nearTenTen = controller.checkContainment(8.0, 8.0, 5.0);
+        Response nearTenTen = controller.searchProperties(8.0, 8.0, 5.0);
         assertThat(nearTenTen.result()).containsExactly(5L);
     }
 
