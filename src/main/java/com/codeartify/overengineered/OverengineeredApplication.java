@@ -9,10 +9,7 @@ import java.util.Map;
 public class OverengineeredApplication {
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(OverengineeredApplication.class);
-        app.setDefaultProperties(Map.of(
-                "server.port", "8081",
-                "spring.application.name", "overengineered"
-        ));
+        app.setAdditionalProfiles("overengineered");
         app.run(args);
     }
 }
