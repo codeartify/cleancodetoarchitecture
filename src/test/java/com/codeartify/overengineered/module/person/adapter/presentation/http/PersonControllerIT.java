@@ -2,8 +2,8 @@ package com.codeartify.overengineered.module.person.adapter.presentation.http;
 
 import com.codeartify.overengineered.GlobalExceptionHandler;
 import com.codeartify.overengineered.contract.person.api.PersonRequest;
-import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonResult;
 import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonUseCase;
+import com.codeartify.overengineered.contract.person.port.outbound.presenter.PresentablePerson;
 import com.codeartify.overengineered.module.person.domain.Name;
 import com.codeartify.overengineered.module.person.domain.Names;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -39,11 +39,11 @@ class PersonControllerIT {
     static class StubConfig {
         @Bean
         CreatePersonUseCase createPersonUseCaseStub() {
-            return command -> {
+            return (command, presentCreatedPerson) -> {
                 // triggers exception if validation fails --> to check BAD_REQUEST mapping
                 new Names(new Name(command.firstName()), new Name(command.lastName()));
 
-                return new CreatePersonResult(
+                presentCreatedPerson.present(new PresentablePerson(
                         "1f98bd2e-61b7-4201-be3c-9503ca9e92f6",
                         command.firstName(),
                         command.lastName(),
@@ -52,7 +52,7 @@ class PersonControllerIT {
                         command.zip(),
                         command.location(),
                         command.country()
-                );
+                ));
             };
         }
     }

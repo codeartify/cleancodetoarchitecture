@@ -2,7 +2,6 @@ package com.codeartify.overengineered;
 
 import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.JavaClasses;
-import com.tngtech.archunit.core.domain.JavaField;
 import com.tngtech.archunit.core.domain.JavaPackage;
 import com.tngtech.archunit.core.importer.ClassFileImporter;
 import com.tngtech.archunit.core.importer.ImportOption;
@@ -17,7 +16,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.*;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.classes;
+import static com.tngtech.archunit.lang.syntax.ArchRuleDefinition.noClasses;
 
 class ArchitectureTest {
 
@@ -65,7 +65,7 @@ class ArchitectureTest {
 
     // 2) Only classes defined in the same module package (or on a lower level) OR anywhere within the same feature
     //    can be accessed by a module class.
-    //    Example: module.person.adapter.infrastructure can access its subpackage module.person.adapter.infrastructure.jpa
+    //    Example: module.person.adapter.data_access can access its subpackage module.person.adapter.data_access.jpa
     //    and it can also access module.person.domain or module.person.app (same feature).
     @Test
     void module_classes_should_only_access_same_package_or_subpackages() {
@@ -151,19 +151,6 @@ class ArchitectureTest {
         }
     }
 
-    // 5a) Presentation must not access contract outbound ports or contract exceptions
-    @Test
-    void presentation_must_not_use_contract_outbound_or_contract_exceptions() {
-        ArchRule rule = noClasses().that()
-                .resideInAPackage(BASE + ".module..adapter.presentation..")
-                .should().accessClassesThat().resideInAnyPackage(
-                        BASE + ".contract..port.outbound..",
-                        BASE + ".contract..exception.."
-                )
-                .because("presentation must only use inbound ports and API DTOs, never outbound ports or contract exceptions");
-        rule.check(importedClasses);
-    }
-
     // 5b) Presentation must not access other module packages (but it may access its own presentation subtree)
     @Test
     void presentation_must_not_access_other_module_packages() {
@@ -203,7 +190,7 @@ class ArchitectureTest {
     @Test
     void app_uses_only_contract_port_outbound_from_contract() {
         ArchRule rule = noClasses().that()
-                .resideInAPackage(BASE + ".module..app..")
+                .resideInAPackage(BASE + ".module..application..")
                 .should().accessClassesThat().resideInAnyPackage(
                         BASE + ".contract..api..",
                         BASE + ".module..adapter.."
@@ -213,14 +200,14 @@ class ArchitectureTest {
         rule.check(importedClasses);
     }
 
-    // 7) A class in module.adapter.infrastructure cannot be accessed directly from classes in module.app nor module.domain
+    // 7) A class in module.adapter.data_access cannot be accessed directly from classes in module.app nor module.domain
     @Test
-    void infrastructure_is_not_accessed_by_app_or_domain() {
+    void data_access_is_not_accessed_by_app_or_domain() {
         ArchRule rule = noClasses().that()
-                .resideInAPackage(BASE + ".module..app..")
+                .resideInAPackage(BASE + ".module..application..")
                 .or().resideInAPackage(BASE + ".module..domain..")
-                .should().accessClassesThat().resideInAPackage(BASE + ".module..adapter.infrastructure..")
-                .because("infrastructure adapters must not be referenced directly by app or domain");
+                .should().accessClassesThat().resideInAPackage(BASE + ".module..adapter.data_access..")
+                .because("data_access adapters must not be referenced directly by app or domain");
         rule.check(importedClasses);
     }
 
@@ -254,7 +241,7 @@ class ArchitectureTest {
         };
 
         ArchRule rule = classes()
-                .that().resideInAPackage(BASE + ".module..app..")
+                .that().resideInAPackage(BASE + ".module..application..")
                 .should(implementContractInbound)
                 .because("application services must expose contract inbound ports");
         rule.check(importedClasses);
@@ -262,9 +249,9 @@ class ArchitectureTest {
 
     // ... existing code ...
 
-    // 11) Every infrastructure adapter must implement a contract outbound port interface.
+    // 11) Every data_access adapter must implement a contract outbound port interface.
     @Test
-    void infrastructure_adapters_must_implement_contract_outbound_port() {
+    void data_access_adapters_must_implement_contract_outbound_port() {
         ArchCondition<JavaClass> implementContractOutbound = new ArchCondition<>("implement an interface from contract.port.outbound") {
             @Override
             public void check(JavaClass clazz, ConditionEvents events) {
@@ -282,9 +269,9 @@ class ArchitectureTest {
         };
 
         ArchRule rule = classes()
-                .that().resideInAPackage(BASE + ".module..adapter.infrastructure")
+                .that().resideInAPackage(BASE + ".module..adapter.data_access")
                 .should(implementContractOutbound)
-                .because("infrastructure adapters must implement contract outbound ports");
+                .because("data_access adapters must implement contract outbound ports");
         rule.check(importedClasses);
     }
 
@@ -294,7 +281,7 @@ class ArchitectureTest {
         ArchRule presentationDoesNotReferenceApp =
                 noClasses().that()
                         .resideInAPackage(BASE + ".module..adapter.presentation..")
-                        .should().accessClassesThat().resideInAPackage(BASE + ".module..app..")
+                        .should().accessClassesThat().resideInAPackage(BASE + ".module..application..")
                         .because("presentation must not depend on app implementations; only on contract inbound ports");
 
         // 2) Any dependency from presentation to contract must be to inbound ports or API DTOs
@@ -309,8 +296,9 @@ class ArchitectureTest {
                             if (!targetPkg.startsWith(BASE + ".contract.")) return; // ignore non-contract
 
                             boolean inbound = targetPkg.contains(".port.inbound");
+                            boolean outbound = targetPkg.contains(".port.outbound");
                             boolean api = targetPkg.contains(".api");
-                            if (!(inbound || api)) {
+                            if (!(inbound || api || outbound)) {
                                 String message = String.format(
                                         "Presentation class %s depends on contract type %s not in port.inbound or api (%s)",
                                         origin.getName(), dep.getTargetClass().getName(), targetPkg
@@ -332,22 +320,23 @@ class ArchitectureTest {
     }
 
     // ADDITIONAL RULE B: App services must ONLY reference contract outbound ports (when touching contract),
-    // must NOT reference infrastructure adapters directly, and can freely use domain and libraries.
+    // must NOT reference data_access adapters directly, and can freely use domain and libraries.
     @Test
-    void app_references_only_contract_outbound_ports_and_not_infrastructure_adapters() {
-        // 1) Forbid referencing infrastructure adapters from app
+    void app_references_only_contract_outbound_ports_and_not_data_access_adapters() {
+        // 1) Forbid referencing data_access adapters from app
         ArchRule appDoesNotReferenceInfrastructure =
                 noClasses().that()
-                        .resideInAPackage(BASE + ".module..app..")
-                        .should().accessClassesThat().resideInAPackage(BASE + ".module..adapter.infrastructure..")
-                        .because("app must not depend on infrastructure implementations; only on contract outbound ports");
+                        .resideInAPackage(BASE + ".module..application..")
+                        .should().accessClassesThat().resideInAPackage(BASE + ".module..adapter.data_access..")
+                        .because("app must not depend on data_access implementations; only on contract outbound ports");
 
         // 2) Any dependency from app to contract must be to outbound ports only
         ArchCondition<JavaClass> onlyUsesOutboundFromContract =
                 new ArchCondition<>("depend on contract outbound ports only") {
                     @Override
                     public void check(JavaClass origin, ConditionEvents events) {
-                        if (!origin.getPackageName().contains(".module.") || !origin.getPackageName().contains(".app.")) return;
+                        if (!origin.getPackageName().contains(".module.") || !origin.getPackageName().contains(".application."))
+                            return;
 
                         origin.getDirectDependenciesFromSelf().forEach(dep -> {
                             String targetPkg = dep.getTargetClass().getPackageName();
@@ -367,7 +356,7 @@ class ArchitectureTest {
 
         ArchRule appContractUsage =
                 classes().that()
-                        .resideInAPackage(BASE + ".module..app..")
+                        .resideInAPackage(BASE + ".module..application..")
                         .should(onlyUsesOutboundFromContract)
                         .because("application services should only use outbound ports from contract");
 

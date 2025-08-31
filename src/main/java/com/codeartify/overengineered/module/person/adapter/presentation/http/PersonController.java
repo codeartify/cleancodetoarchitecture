@@ -21,9 +21,11 @@ public class PersonController {
     public PersonResponse createPerson(@RequestBody PersonRequest request) {
         var personCommand = toCreatePersonCommand(request);
 
-        var createdPersonResult = createPersonUseCase.createPerson(personCommand);
+        var presentCreatedPerson = new CreatedPersonPresenter();
 
-        return toPersonResponse(createdPersonResult);
+        createPersonUseCase.execute(personCommand, presentCreatedPerson);
+
+        return toPersonResponse(presentCreatedPerson.getResult());
     }
 
     @GetMapping(value = "/{id}")

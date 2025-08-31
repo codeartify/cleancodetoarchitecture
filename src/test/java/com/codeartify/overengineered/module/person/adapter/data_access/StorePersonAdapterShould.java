@@ -1,21 +1,25 @@
-package com.codeartify.overengineered.module.person.adapter.infrastructure;
+package com.codeartify.overengineered.module.person.adapter.data_access;
 
 
-import com.codeartify.overengineered.contract.person.port.outbound.PersonToStore;
-import com.codeartify.overengineered.contract.person.port.outbound.StorePerson;
-import com.codeartify.overengineered.contract.person.port.outbound.StoredPerson;
-import com.codeartify.overengineered.module.person.adapter.infrastructure.jpa.PersonEntity;
-import com.codeartify.overengineered.module.person.adapter.infrastructure.jpa.PersonRepository;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.PersonToStore;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.StorePerson;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.StoredPerson;
+import com.codeartify.overengineered.module.person.adapter.data_access.jpa.PersonEntity;
+import com.codeartify.overengineered.module.person.adapter.data_access.jpa.PersonRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
-@SpringBootTest
+@ActiveProfiles("test")
+@SpringBootTest(properties = {
+        "spring.datasource.url=jdbc:h2:mem:overengineered-testdb;MODE=PostgreSQL;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE",
+        "spring.jpa.hibernate.ddl-auto=create-drop"
+})
 @Transactional
 class StorePersonAdapterDatabaseTest {
 

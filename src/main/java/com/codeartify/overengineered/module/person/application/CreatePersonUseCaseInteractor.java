@@ -1,38 +1,40 @@
-package com.codeartify.overengineered.module.person.app;
+package com.codeartify.overengineered.module.person.application;
 
 import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonCommand;
-import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonResult;
 import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonUseCase;
-import com.codeartify.overengineered.contract.person.port.outbound.PersonToStore;
-import com.codeartify.overengineered.contract.person.port.outbound.StorePerson;
-import com.codeartify.overengineered.contract.person.port.outbound.StoredPerson;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.PersonToStore;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.StoredPerson;
+import com.codeartify.overengineered.contract.person.port.outbound.presenter.PresentCreatedPerson;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.StorePerson;
+import com.codeartify.overengineered.contract.person.port.outbound.presenter.PresentablePerson;
 import com.codeartify.overengineered.module.person.domain.*;
- import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.UUID;
 
 
 @Service
-public class CreatePersonService implements CreatePersonUseCase {
+public class CreatePersonUseCaseInteractor implements CreatePersonUseCase {
 
     private final StorePerson storePerson;
 
-    public CreatePersonService(StorePerson storePerson) {
+    public CreatePersonUseCaseInteractor(StorePerson storePerson) {
         this.storePerson = storePerson;
     }
 
-    @Override
     @Transactional
-    public CreatePersonResult createPerson(CreatePersonCommand command) {
+    @Override
+    public void execute(CreatePersonCommand command, PresentCreatedPerson presentCreatedPerson) {
         Person person = toPerson(command);
         var personToStore = toPersonToStore(person);
-        var createdPerson = storePerson.storePerson(personToStore);
-        return toResult(createdPerson);
+        var storedPerson = storePerson.storePerson(personToStore);
+        PresentablePerson presentablePerson = toPresentablePerson(storedPerson);
+        presentCreatedPerson.present(presentablePerson);
     }
 
-    private static CreatePersonResult toResult(StoredPerson storedPerson) {
-        return new CreatePersonResult(
+    private PresentablePerson toPresentablePerson(StoredPerson storedPerson) {
+        return new PresentablePerson(
                 storedPerson.id(),
                 storedPerson.firstName(),
                 storedPerson.lastName(),
@@ -42,6 +44,7 @@ public class CreatePersonService implements CreatePersonUseCase {
                 storedPerson.location(),
                 storedPerson.country());
     }
+
 
     private static Person toPerson(CreatePersonCommand command) {
         return new Person(

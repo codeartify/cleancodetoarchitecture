@@ -3,10 +3,10 @@ package com.codeartify.overengineered.module.person.adapter.presentation.http;
 import com.codeartify.overengineered.contract.person.api.PersonRequest;
 import com.codeartify.overengineered.contract.person.api.PersonResponse;
 import com.codeartify.overengineered.contract.person.exception.*;
-import com.codeartify.overengineered.contract.person.port.outbound.PersonToStore;
-import com.codeartify.overengineered.contract.person.port.outbound.StorePerson;
-import com.codeartify.overengineered.contract.person.port.outbound.StoredPerson;
-import com.codeartify.overengineered.module.person.app.CreatePersonService;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.PersonToStore;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.StorePerson;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.StoredPerson;
+import com.codeartify.overengineered.module.person.application.CreatePersonUseCaseInteractor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,7 @@ class PersonControllerTest {
 
     @BeforeEach
     void setUp() {
-        var createPersonService = new CreatePersonService(storePerson);
+        var createPersonService = new CreatePersonUseCaseInteractor(storePerson);
         controller = new PersonController(createPersonService);
     }
 

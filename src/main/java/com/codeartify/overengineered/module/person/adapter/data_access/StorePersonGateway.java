@@ -1,19 +1,19 @@
-package com.codeartify.overengineered.module.person.adapter.infrastructure;
+package com.codeartify.overengineered.module.person.adapter.data_access;
 
 
-import com.codeartify.overengineered.contract.person.port.outbound.PersonToStore;
-import com.codeartify.overengineered.contract.person.port.outbound.StorePerson;
-import com.codeartify.overengineered.contract.person.port.outbound.StoredPerson;
-import com.codeartify.overengineered.module.person.adapter.infrastructure.jpa.PersonEntity;
-import com.codeartify.overengineered.module.person.adapter.infrastructure.jpa.PersonRepository;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.PersonToStore;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.StorePerson;
+import com.codeartify.overengineered.contract.person.port.outbound.gateway.StoredPerson;
+import com.codeartify.overengineered.module.person.adapter.data_access.jpa.PersonEntity;
+import com.codeartify.overengineered.module.person.adapter.data_access.jpa.PersonRepository;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StorePersonAdapter implements StorePerson {
+public class StorePersonGateway implements StorePerson {
 
     private final PersonRepository personRepository;
 
-    public StorePersonAdapter(PersonRepository personRepository) {
+    public StorePersonGateway(PersonRepository personRepository) {
         this.personRepository = personRepository;
     }
 
