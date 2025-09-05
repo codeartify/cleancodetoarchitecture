@@ -16,8 +16,8 @@ public class PropertySearchService implements SearchProperties {
     }
 
     @Override
-    public List<Long> execute(Double x, Double y, Double r) throws Exception {
-        var search = PropertySearch.from(x, y, r);
+    public List<Long> execute(Double x, Double y, Double radius) throws Exception {
+        var search = PropertySearch.from(x, y, radius);
 
         var properties = this.findProperties.findAll();
 
