@@ -34,11 +34,6 @@ class PersonControllerTest {
     }
 
     @Test
-    void should_fail_intentionally() {
-        fail();
-    }
-
-    @Test
     void should_successfully_create_person() {
         // Arrange
         var request = new PersonRequest(
