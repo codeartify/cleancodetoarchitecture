@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +31,11 @@ class PersonControllerTest {
     void setUp() {
         var createPersonService = new CreatePersonUseCaseInteractor(storePerson);
         controller = new PersonController(createPersonService);
+    }
+
+    @Test
+    void should_fail_intentionally() {
+        fail();
     }
 
     @Test
