@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+          cache: maven
+
+      - name: Show Maven/Java versions
+        run: |
+          mvn -v
+          java -version
+
+      # ---------- UNIT TESTS ----------
+      - name: Unit tests (Surefire)
+        run: mvn -B -ntp -U -DskipITs=true verify
+
+      # ---------- INTEGRATION TESTS ----------
+      # Run only Failsafe (skip unit tests to keep phases clean)
+      - name: Integration tests (Failsafe)
+        run: mvn -B -ntp -DskipTests=true failsafe:integration-test failsafe:verify
+
+      # ---------- ARTIFACTS ON FAILURE ----------
+      - name: Upload surefire reports (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports
+          path: |
+            **/target/surefire-reports/*.xml
+            **/target/surefire-reports/*.txt
+
+      - name: Upload failsafe reports (on failure)
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failsafe-reports
+          path: |
+            **/target/failsafe-reports/*.xml
+            **/target/failsafe-reports/*.txt
