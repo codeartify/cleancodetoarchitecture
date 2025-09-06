@@ -8,23 +8,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class Controller {
 
-    private final PropertyRepository propertyRepository;
+    private final RealEstateRepository realEstateRepository;
 
-    public Controller(PropertyRepository propertyRepository) {
-        this.propertyRepository = propertyRepository;
+    public Controller(RealEstateRepository realEstateRepository) {
+        this.realEstateRepository = realEstateRepository;
     }
 
     @GetMapping("/api/realestate")
-    public Response searchProperties(
+    public Response searchRealEstate(
             @RequestParam(name = "x", required = false) Double x,
             @RequestParam(name = "y", required = false) Double y,
             @RequestParam(name = "r", required = false) Double r)
             throws Exception {
-        var search = PropertySearch.from(x, y, r);
+        var search = RealEstateSearch.from(x, y, r);
 
-        var properties = propertyRepository.findAll();
+        var realEstate = realEstateRepository.findAll();
 
-        var results = search.findContained(properties);
+        var results = search.findContained(realEstate);
 
         return new Response(results);
     }

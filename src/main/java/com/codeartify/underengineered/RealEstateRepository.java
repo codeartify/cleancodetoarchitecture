@@ -10,19 +10,19 @@ import java.util.stream.IntStream;
 import static java.util.stream.Collectors.toList;
 
 @Repository
-public class PropertyRepository {
+public class RealEstateRepository {
     private final JdbcTemplate jdbcTemplate;
 
-    public PropertyRepository(JdbcTemplate jdbcTemplate) {
+    public RealEstateRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    List<Property> findAll() throws Exception {
+    List<RealEstate> findAll() throws Exception {
         var ids = new ArrayList<Long>();
         var xCoords = new ArrayList<Double>();
         var yCoords = new ArrayList<Double>();
 
-        this.jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
+        this.jdbcTemplate.query("SELECT id, x, y FROM real_estate", rs -> {
             var id = rs.getLong("id");
             var xx = rs.getDouble("x");
             var yy = rs.getDouble("y");
@@ -44,7 +44,7 @@ public class PropertyRepository {
         }
 
         return IntStream.range(0, xCoords.size())
-                .mapToObj(i -> new Property(ids.get(i), new Location(xCoords.get(i), yCoords.get(i))))
+                .mapToObj(i -> new RealEstate(ids.get(i), new Location(xCoords.get(i), yCoords.get(i))))
                 .collect(toList());
     }
 }
