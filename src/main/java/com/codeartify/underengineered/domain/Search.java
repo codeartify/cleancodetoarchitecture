@@ -5,10 +5,10 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public record Search(Location searchLocation, SearchRadius searchRadius) {
-    public List<Long> findContained(List<Property> properties) {
-        return properties.stream()
+    public List<Long> findContained(List<RealEstate> realEstates) {
+        return realEstates.stream()
                 .filter(this::contains)
-                .map(Property::id)
+                .map(RealEstate::id)
                 .collect(toList());
     }
 
@@ -20,9 +20,9 @@ public record Search(Location searchLocation, SearchRadius searchRadius) {
         return new Search(new Location(x, y), new SearchRadius(searchRadius));
     }
 
-    boolean contains(Property property) {
-        var deltaX = property.location().x() - searchLocation().x();
-        var deltaY = property.location().y() - searchLocation().y();
+    boolean contains(RealEstate realEstate) {
+        var deltaX = realEstate.location().x() - searchLocation().x();
+        var deltaY = realEstate.location().y() - searchLocation().y();
         return square(deltaX) + square(deltaY) <= square(searchRadius().value());
     }
 }
