@@ -42,7 +42,7 @@ public class Controller {
             throw new RuntimeException("radius must be greater than 0");
         }
 
-        jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
+        jdbcTemplate.query("SELECT id, x, y FROM real_estate", rs -> {
             var id = rs.getLong("id");
             var xx = rs.getDouble("x");
             var yy = rs.getDouble("y");
