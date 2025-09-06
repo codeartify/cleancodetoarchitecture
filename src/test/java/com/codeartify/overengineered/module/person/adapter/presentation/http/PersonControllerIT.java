@@ -6,6 +6,7 @@ import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonRe
 import com.codeartify.overengineered.contract.person.port.inbound.CreatePersonUseCase;
 import com.codeartify.overengineered.module.person.domain.Name;
 import com.codeartify.overengineered.module.person.domain.Names;
+import com.codeartify.overengineered.module.person.domain.Salutation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +42,12 @@ class PersonControllerIT {
         CreatePersonUseCase createPersonUseCaseStub() {
             return command -> {
                 // triggers exception if validation fails --> to check BAD_REQUEST mapping
-                new Names(new Name(command.firstName()), new Name(command.lastName()));
+                var salutation = Salutation.from(command.salutation());
+                new Names(salutation, new Name(command.firstName()), new Name(command.lastName()));
 
                 return new CreatePersonResult(
                         "1f98bd2e-61b7-4201-be3c-9503ca9e92f6",
+                        salutation.capitalized(),
                         command.firstName(),
                         command.lastName(),
                         command.street(),
@@ -60,6 +63,7 @@ class PersonControllerIT {
     @Test
     void should_create_person() throws Exception {
         var request = new PersonRequest(
+                "mr",
                 "John",
                 "Doe",
                 "Main Street",
@@ -75,6 +79,7 @@ class PersonControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", notNullValue()))
+                .andExpect(jsonPath("$.salutation", is("Mr")))
                 .andExpect(jsonPath("$.firstName", is("John")))
                 .andExpect(jsonPath("$.lastName", is("Doe")))
                 .andExpect(jsonPath("$.street", is("Main Street")))
@@ -87,7 +92,7 @@ class PersonControllerIT {
     @Test
     void createPerson_returnsBadRequest_whenValidationFails() throws Exception {
         var invalidRequest = new PersonRequest(
-                "",           // invalid first name
+                "mr", "",           // invalid first name
                 "Doe",
                 "Main Street",
                 "123",

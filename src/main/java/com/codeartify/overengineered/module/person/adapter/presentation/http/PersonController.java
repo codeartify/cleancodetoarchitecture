@@ -33,6 +33,7 @@ public class PersonController {
 
     private static CreatePersonCommand toCreatePersonCommand(PersonRequest request) {
         return new CreatePersonCommand(
+                request.salutation(),
                 request.firstName(),
                 request.lastName(),
                 request.street(),
@@ -46,6 +47,7 @@ public class PersonController {
     private static PersonResponse toPersonResponse(CreatePersonResult createdPerson) {
         return new PersonResponse(
                 createdPerson.id(),
+                createdPerson.salutation(),
                 createdPerson.firstName(),
                 createdPerson.lastName(),
                 createdPerson.street(),

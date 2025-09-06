@@ -7,6 +7,7 @@ import com.codeartify.overengineered.contract.person.port.outbound.PersonToStore
 import com.codeartify.overengineered.contract.person.port.outbound.StorePerson;
 import com.codeartify.overengineered.contract.person.port.outbound.StoredPerson;
 import com.codeartify.overengineered.module.person.app.CreatePersonService;
+import com.codeartify.overengineered.module.person.domain.Salutation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,9 +35,10 @@ class PersonControllerTest {
 
     @Test
     void should_successfully_create_person() {
-        // Arrange
+
         var request = new PersonRequest(
-                "John",
+                "Ms",
+                "Jane",
                 "Doe",
                 "Main Street",
                 "123",
@@ -46,6 +48,7 @@ class PersonControllerTest {
         );
         when(storePerson.storePerson(any(PersonToStore.class))).thenReturn(new StoredPerson(
                 "1f98bd2e-61b7-4201-be3c-9503ca9e92f6",
+                request.salutation(),
                 request.firstName(),
                 request.lastName(),
                 request.street(),
@@ -57,7 +60,8 @@ class PersonControllerTest {
 
         PersonResponse response = controller.createPerson(request);
 
-        assertThat(response.firstName()).isEqualTo("John");
+        assertThat(response.salutation()).isEqualTo("Ms");
+        assertThat(response.firstName()).isEqualTo("Jane");
         assertThat(response.lastName()).isEqualTo("Doe");
         assertThat(response.street()).isEqualTo("Main Street");
         assertThat(response.streetNumber()).isEqualTo("123");
@@ -70,7 +74,7 @@ class PersonControllerTest {
     @Test
     void createPerson_shouldFail_whenFirstNameEmpty() {
         var request = new PersonRequest(
-                "",
+                "Ms", "",
                 "Doe",
                 "Main Street",
                 "123",
@@ -87,7 +91,7 @@ class PersonControllerTest {
     @Test
     void createPerson_shouldFail_whenLastNameEmpty() {
         var request = new PersonRequest(
-                "John",
+                "Ms", "Jane",
                 "",
                 "Main Street",
                 "123",
@@ -105,7 +109,7 @@ class PersonControllerTest {
     @Test
     void createPerson_shouldFail_whenStreetEmpty() {
         var request = new PersonRequest(
-                "John",
+                "Ms", "Jane",
                 "Doe",
                 "",
                 "123",
@@ -123,7 +127,7 @@ class PersonControllerTest {
     @Test
     void createPerson_shouldFail_whenStreetNumberEmpty() {
         var request = new PersonRequest(
-                "John",
+                "Ms", "Jane",
                 "Doe",
                 "Main Street",
                 "",
@@ -141,7 +145,7 @@ class PersonControllerTest {
     @Test
     void createPerson_shouldFail_whenZipInvalid() {
         var request = new PersonRequest(
-                "John",
+                "Ms", "Jane",
                 "Doe",
                 "Main Street",
                 "123",
@@ -159,7 +163,7 @@ class PersonControllerTest {
     @Test
     void createPerson_shouldFail_whenLocationEmpty() {
         var request = new PersonRequest(
-                "John",
+                "Ms", "Jane",
                 "Doe",
                 "Main Street",
                 "123",
@@ -177,7 +181,7 @@ class PersonControllerTest {
     @Test
     void createPerson_shouldFail_whenCountryEmpty() {
         var request = new PersonRequest(
-                "John",
+                "Ms", "Jane",
                 "Doe",
                 "Main Street",
                 "123",
@@ -189,6 +193,38 @@ class PersonControllerTest {
         assertThatThrownBy(() -> controller.createPerson(request))
                 .isInstanceOf(CountryInvalidException.class)
                 .hasMessage("Country must not be null or empty");
+
+    }
+
+    @Test
+    void createPerson_should_default_to_unknown_when_invalid_salutation_is_provided() {
+
+        var request = new PersonRequest(
+                "mrs",
+                "Jane",
+                "Doe",
+                "Main Street",
+                "123",
+                "12345",
+                "Springfield",
+                "USA"
+        );
+
+        when(storePerson.storePerson(any(PersonToStore.class))).thenReturn(new StoredPerson(
+                "1f98bd2e-61b7-4201-be3c-9503ca9e92f6",
+                Salutation.UNKNOWN.capitalized(),
+                request.firstName(),
+                request.lastName(),
+                request.street(),
+                request.streetNumber(),
+                request.zip(),
+                request.location(),
+                request.country()
+        ));
+
+        var person = controller.createPerson(request);
+
+        assertThat(person.salutation()).isEqualTo("Unknown");
 
     }
 

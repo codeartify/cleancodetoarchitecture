@@ -34,6 +34,7 @@ public class CreatePersonService implements CreatePersonUseCase {
     private static CreatePersonResult toResult(StoredPerson storedPerson) {
         return new CreatePersonResult(
                 storedPerson.id(),
+                storedPerson.salutation(),
                 storedPerson.firstName(),
                 storedPerson.lastName(),
                 storedPerson.street(),
@@ -46,6 +47,7 @@ public class CreatePersonService implements CreatePersonUseCase {
     private static Person toPerson(CreatePersonCommand command) {
         return new Person(
                 new Names(
+                        Salutation.from(command.salutation()),
                         new Name(command.firstName()),
                         new Name(command.lastName())
                 ),
@@ -63,6 +65,7 @@ public class CreatePersonService implements CreatePersonUseCase {
     private static PersonToStore toPersonToStore(Person person) {
         return new PersonToStore(
                 UUID.randomUUID().toString(),
+                person.names().salutation().capitalized(),
                 person.names().firstName().value(),
                 person.names().lastName().value(),
                 person.address().street().value(),

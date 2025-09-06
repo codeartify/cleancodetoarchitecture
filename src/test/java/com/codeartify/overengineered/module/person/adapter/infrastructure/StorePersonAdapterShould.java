@@ -32,6 +32,7 @@ class StorePersonAdapterDatabaseTest {
     void should_successfully_store_person() {
         var personToStore = new PersonToStore(
                 "1f98bd2e-61b7-4201-be3c-9503ca9e92f6",
+                "Mr",
                 "John",
                 "Doe",
                 "Main Street",
@@ -43,6 +44,7 @@ class StorePersonAdapterDatabaseTest {
 
         StoredPerson stored = storePersonAdapter.storePerson(personToStore);
 
+        assertThat(stored.salutation()).isEqualTo("Mr");
         assertThat(stored.firstName()).isEqualTo("John");
         assertThat(stored.lastName()).isEqualTo("Doe");
         assertThat(stored.street()).isEqualTo("Main Street");
@@ -59,6 +61,7 @@ class StorePersonAdapterDatabaseTest {
 
         PersonEntity saved = all.getFirst();
         assertThat(saved.getId()).isNotNull();
+        assertThat(saved.getSalutation()).isEqualTo("Mr");
         assertThat(saved.getFirstName()).isEqualTo("John");
         assertThat(saved.getLastName()).isEqualTo("Doe");
         assertThat(saved.getStreet()).isEqualTo("Main Street");

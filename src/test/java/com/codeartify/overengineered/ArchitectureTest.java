@@ -384,7 +384,9 @@ class ArchitectureTest {
                         BASE + ".module..domain..",
                         BASE + ".contract..exception..",
                         // and JDK
-                        "java.."
+                        "java..",
+                        // And spring (additionally needed for using other libs in domain if needed)
+                        "org.springframework.."
                 )
                 .because("domain should be independent and must not depend on app, adapters, or contract");
         rule.check(importedClasses);

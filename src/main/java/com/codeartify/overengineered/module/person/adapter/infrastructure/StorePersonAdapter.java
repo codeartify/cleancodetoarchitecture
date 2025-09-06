@@ -29,6 +29,7 @@ public class StorePersonAdapter implements StorePerson {
     private static StoredPerson toStoredPerson(PersonEntity entity) {
         return new StoredPerson(
                 entity.getId(),
+                entity.getSalutation(),
                 entity.getFirstName(),
                 entity.getLastName(),
                 entity.getStreet(),
@@ -42,6 +43,7 @@ public class StorePersonAdapter implements StorePerson {
     private static PersonEntity toPersonEntity(PersonToStore person) {
         PersonEntity entity = new PersonEntity();
         entity.setId(person.id());
+        entity.setSalutation(person.salutation());
         entity.setFirstName(person.firstName());
         entity.setLastName(person.lastName());
         entity.setStreet(person.street());

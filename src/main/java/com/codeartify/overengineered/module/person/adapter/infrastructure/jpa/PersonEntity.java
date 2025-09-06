@@ -15,6 +15,7 @@ import lombok.Setter;
 public class PersonEntity {
     @Id
     private String id;
+    private String salutation;
     private String firstName;
     private String lastName;
     private String street;
