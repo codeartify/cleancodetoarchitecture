@@ -29,9 +29,9 @@ public class Controller {
         var xCoords = new ArrayList<Double>();
         var yCoords = new ArrayList<Double>();
 
-        var search = PropertySearch.from(x, y, r);
+        var search = RealEstateSearch.from(x, y, r);
 
-        jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
+        jdbcTemplate.query("SELECT id, x, y FROM real_estate", rs -> {
             var id = rs.getLong("id");
             var xx = rs.getDouble("x");
             var yy = rs.getDouble("y");
@@ -55,10 +55,10 @@ public class Controller {
             var y1 = yCoords.get(i);
             var id = ids.get(i);
 
-            var property = new Property(id, new Location(x1, y1));
+            var realEstate = new RealEstate(id, new Location(x1, y1));
 
-            if (search.contains(property)) {
-                results.add(property.id());
+            if (search.contains(realEstate)) {
+                results.add(realEstate.id());
             }
         }
 
