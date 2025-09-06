@@ -20,7 +20,7 @@ public class DataInitializer implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         jdbcTemplate.execute("""
-            CREATE TABLE IF NOT EXISTS properties (
+            CREATE TABLE IF NOT EXISTS real_estate (
                 id BIGINT PRIMARY KEY,
                 x DOUBLE PRECISION NOT NULL,
                 y DOUBLE PRECISION NOT NULL,
@@ -33,7 +33,7 @@ public class DataInitializer implements ApplicationRunner {
             )
             """);
 
-        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM properties", Integer.class);
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM real_estate", Integer.class);
         if (count == null || count == 0) {
             List<Object[]> rows = List.of(
                 new Object[]{1L, 1.0, 1.0, "1 Main St", "Alice Realty", new BigDecimal("350000.00"),
@@ -49,7 +49,7 @@ public class DataInitializer implements ApplicationRunner {
             );
 
             jdbcTemplate.batchUpdate("""
-                INSERT INTO properties (id, x, y, address, seller, price, earliest_move_in_date, contact_phone, contact_email)
+                INSERT INTO real_estate (id, x, y, address, seller, price, earliest_move_in_date, contact_phone, contact_email)
                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """, rows);
         }

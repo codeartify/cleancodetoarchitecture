@@ -42,9 +42,9 @@ public class Controller {
             throw new RuntimeException("radius must be greater than 0");
         }
 
-        var search = new PropertySearch(new Location(x, y), new SearchRadius(r));
+        var search = new RealEstateSearch(new Location(x, y), new SearchRadius(r));
 
-        jdbcTemplate.query("SELECT id, x, y FROM properties", rs -> {
+        jdbcTemplate.query("SELECT id, x, y FROM real_estate", rs -> {
             var id = rs.getLong("id");
             var xx = rs.getDouble("x");
             var yy = rs.getDouble("y");
@@ -68,7 +68,7 @@ public class Controller {
             var y1 = yCoords.get(i);
             var id = ids.get(i);
 
-            var property = new Property(id, new Location(x1, y1));
+            var property = new RealEstate(id, new Location(x1, y1));
 
             if (contains(search, property)) {
                 results.add(property.id());
@@ -78,7 +78,7 @@ public class Controller {
         return new Response(results);
     }
 
-    private static boolean contains(PropertySearch propertySearch, Property property) {
+    private static boolean contains(RealEstateSearch propertySearch, RealEstate property) {
         var deltaX = property.location().x() - propertySearch.searchLocation().x();
         var deltaY = property.location().y() - propertySearch.searchLocation().y();
         return square(deltaX) + square(deltaY) <= square(propertySearch.searchRadius().value());
