@@ -1,4 +1,4 @@
-package com.codeartify.underengineered.domain;
+package com.codeartify.underengineered.realestatesearch.domain;
 
 public record SearchRadius(Double value) {
     public SearchRadius {

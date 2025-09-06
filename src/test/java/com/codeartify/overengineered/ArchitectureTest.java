@@ -30,7 +30,7 @@ class ArchitectureTest {
             .importPackages(BASE);
 
     // 1) No class defined in module can directly access another class in another feature package in module
-    //    (e.g., module.person -> module.property is forbidden; within the same feature is allowed).
+    //    (e.g., module.person -> module.else is forbidden; within the same feature is allowed).
     @Test
     void module_classes_must_not_access_other_module_packages() {
         ArchCondition<JavaClass> notAccessOtherModuleFeatures = new ArchCondition<>("not access other module features") {
@@ -225,7 +225,7 @@ class ArchitectureTest {
     }
 
     // 8) Every module feature is an independent subdomain: no module package may access another module package.
-    //    (e.g., module.person cannot access module.property).
+    //    (e.g., module.person cannot access module.else).
     @Test
     void no_dependencies_between_module_features() {
         ArchRule rule = SlicesRuleDefinition.slices()

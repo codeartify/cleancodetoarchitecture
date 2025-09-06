@@ -1,10 +1,10 @@
 package com.codeartify.underengineered;
 
-import com.codeartify.underengineered.adapter.data_access.PropertyRepository;
-import com.codeartify.underengineered.adapter.presentation.PropertySearchController;
-import com.codeartify.underengineered.adapter.presentation.Response;
-import com.codeartify.underengineered.application.PropertySearchService;
-import com.codeartify.underengineered.application.port.outbound.FindProperties;
+import com.codeartify.underengineered.realestatesearch.adapter.data_access.RealEstateRepository;
+import com.codeartify.underengineered.realestatesearch.adapter.presentation.RealEstateSearchController;
+import com.codeartify.underengineered.realestatesearch.adapter.presentation.Response;
+import com.codeartify.underengineered.realestatesearch.application.RealEstateSearchService;
+import com.codeartify.underengineered.realestatesearch.application.port.outbound.FindRealEstate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,42 +19,40 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ControllerTest {
 
     private JdbcTemplate jdbcTemplate;
-    private PropertySearchController controller;
+    private RealEstateSearchController controller;
 
     @BeforeEach
     void setUp() {
         jdbcTemplate = mock(JdbcTemplate.class);
-        final FindProperties findProperties = new PropertyRepository(jdbcTemplate);
-        controller = new PropertySearchController(new PropertySearchService(findProperties));
+        final FindRealEstate findRealEstate = new RealEstateRepository(jdbcTemplate);
+        controller = new RealEstateSearchController(new RealEstateSearchService(findRealEstate));
     }
 
     // --- Missing parameter guards ---
 
     @Test
     void should_fail_when_x_is_missing() {
-        assertThatThrownBy(() -> controller.searchProperties(null, 0.0, 1.0))
+        assertThatThrownBy(() -> controller.searchRealEstate(null, 0.0, 1.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("x is missing");
     }
 
     @Test
     void should_fail_when_y_is_missing() {
-        assertThatThrownBy(() -> controller.searchProperties(0.0, null, 1.0))
+        assertThatThrownBy(() -> controller.searchRealEstate(0.0, null, 1.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("y is missing");
     }
 
     @Test
     void should_fail_when_r_is_missing() {
-        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, null))
+        assertThatThrownBy(() -> controller.searchRealEstate(0.0, 0.0, null))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("radius is missing");
     }
@@ -63,14 +61,14 @@ class ControllerTest {
 
     @Test
     void should_reject_radius_zero() {
-        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 0.0))
+        assertThatThrownBy(() -> controller.searchRealEstate(0.0, 0.0, 0.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("radius must be greater than 0");
     }
 
     @Test
     void should_reject_radius_negative() {
-        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, -1.0))
+        assertThatThrownBy(() -> controller.searchRealEstate(0.0, 0.0, -1.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("radius must be greater than 0");
     }
@@ -82,9 +80,9 @@ class ControllerTest {
         // Simulate empty result set: handler is never called -> xCoords stays empty
         doAnswer(invocation -> null)
                 .when(jdbcTemplate)
-                .query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+                .query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
 
-        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 5.0))
+        assertThatThrownBy(() -> controller.searchRealEstate(0.0, 0.0, 5.0))
                 .isInstanceOf(Exception.class)
                 .hasMessage("x coordinates are empty");
     }
@@ -93,9 +91,9 @@ class ControllerTest {
     void should_propagate_sql_exception() {
         doThrow(new RuntimeException("DB down"))
                 .when(jdbcTemplate)
-                .query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+                .query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
 
-        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 5.0))
+        assertThatThrownBy(() -> controller.searchRealEstate(0.0, 0.0, 5.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("DB down");
     }
@@ -118,9 +116,9 @@ class ControllerTest {
             // This will throw before yCoords.add(...)
             handler.processRow(rs);
             return null;
-        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
 
-        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 5.0))
+        assertThatThrownBy(() -> controller.searchRealEstate(0.0, 0.0, 5.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("boom on y");
     }
@@ -149,9 +147,9 @@ class ControllerTest {
             handler.processRow(r2);
 
             return null;
-        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
 
-        assertThatThrownBy(() -> controller.searchProperties(0.0, 0.0, 5.0))
+        assertThatThrownBy(() -> controller.searchRealEstate(0.0, 0.0, 5.0))
                 .isInstanceOf(RuntimeException.class)
                 .hasMessage("row2 y failed");
     }
@@ -167,7 +165,7 @@ class ControllerTest {
         };
         stubRows(rows);
 
-        Response response = controller.searchProperties(0.0, 0.0, 5.0);
+        Response response = controller.searchRealEstate(0.0, 0.0, 5.0);
         assertThat(response.result()).containsExactly(1L);
     }
 
@@ -179,7 +177,7 @@ class ControllerTest {
         };
         stubRows(rows);
 
-        Response response = controller.searchProperties(0.0, 0.0, 5.0);
+        Response response = controller.searchRealEstate(0.0, 0.0, 5.0);
         assertThat(response.result()).isEmpty();
     }
 
@@ -195,7 +193,7 @@ class ControllerTest {
         };
         stubRows(rows);
 
-        Response response = controller.searchProperties(0.0, 0.0, 5.0);
+        Response response = controller.searchRealEstate(0.0, 0.0, 5.0);
 
         List<Long> ids = response.result();
         assertThat(ids).containsExactlyInAnyOrder(1L, 2L, 3L, 5L);
@@ -214,11 +212,11 @@ class ControllerTest {
         stubRows(rows);
 
         // Near origin
-        Response nearOrigin = controller.searchProperties(0.0, 0.0, 2.0);
+        Response nearOrigin = controller.searchRealEstate(0.0, 0.0, 2.0);
         assertThat(nearOrigin.result()).containsExactlyInAnyOrder(0L, 7L);
 
         // Near (10,10)
-        Response nearTenTen = controller.searchProperties(8.0, 8.0, 5.0);
+        Response nearTenTen = controller.searchRealEstate(8.0, 8.0, 5.0);
         assertThat(nearTenTen.result()).containsExactly(5L);
     }
 
@@ -239,6 +237,6 @@ class ControllerTest {
                 handler.processRow(rs);
             }
             return null;
-        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
     }
 }

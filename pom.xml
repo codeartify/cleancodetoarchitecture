@@ -51,12 +51,17 @@
             <artifactId>lombok</artifactId>
             <version>1.18.38</version>
         </dependency>
-      <dependency>
-        <groupId>com.tngtech.archunit</groupId>
-        <artifactId>archunit</artifactId>
-        <version>1.4.1</version>
-        <scope>test</scope>
-      </dependency>
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit</artifactId>
+            <version>1.4.1</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.googlecode.libphonenumber</groupId>
+            <artifactId>libphonenumber</artifactId>
+            <version>8.13.19</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
