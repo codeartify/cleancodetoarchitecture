@@ -76,7 +76,7 @@ class ControllerTest {
         // Simulate empty result set: handler is never called -> xCoords stays empty
         doAnswer(invocation -> null)
                 .when(jdbcTemplate)
-                .query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+                .query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
 
         assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, 5.0))
                 .isInstanceOf(Exception.class)
@@ -87,7 +87,7 @@ class ControllerTest {
     void should_propagate_sql_exception() {
         doThrow(new RuntimeException("DB down"))
                 .when(jdbcTemplate)
-                .query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+                .query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
 
         assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, 5.0))
                 .isInstanceOf(RuntimeException.class)
@@ -112,7 +112,7 @@ class ControllerTest {
             // This will throw before yCoords.add(...)
             handler.processRow(rs);
             return null;
-        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
 
         assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, 5.0))
                 .isInstanceOf(RuntimeException.class)
@@ -143,7 +143,7 @@ class ControllerTest {
             handler.processRow(r2);
 
             return null;
-        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
 
         assertThatThrownBy(() -> controller.checkContainment(0.0, 0.0, 5.0))
                 .isInstanceOf(RuntimeException.class)
@@ -233,6 +233,6 @@ class ControllerTest {
                 handler.processRow(rs);
             }
             return null;
-        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM properties"), any(RowCallbackHandler.class));
+        }).when(jdbcTemplate).query(eq("SELECT id, x, y FROM real_estate"), any(RowCallbackHandler.class));
     }
 }
