@@ -68,20 +68,20 @@ public class Controller {
             var y1 = yCoords.get(i);
             var id = ids.get(i);
 
-            var property = new RealEstate(id, new Location(x1, y1));
+            var realEstate = new RealEstate(id, new Location(x1, y1));
 
-            if (contains(search, property)) {
-                results.add(property.id());
+            if (contains(search, realEstate)) {
+                results.add(realEstate.id());
             }
         }
 
         return new Response(results);
     }
 
-    private static boolean contains(RealEstateSearch propertySearch, RealEstate property) {
-        var deltaX = property.location().x() - propertySearch.searchLocation().x();
-        var deltaY = property.location().y() - propertySearch.searchLocation().y();
-        return square(deltaX) + square(deltaY) <= square(propertySearch.searchRadius().value());
+    private static boolean contains(RealEstateSearch realEstateSearch, RealEstate realEstate) {
+        var deltaX = realEstate.location().x() - realEstateSearch.searchLocation().x();
+        var deltaY = realEstate.location().y() - realEstateSearch.searchLocation().y();
+        return square(deltaX) + square(deltaY) <= square(realEstateSearch.searchRadius().value());
     }
 
     private static double square(double value) {
