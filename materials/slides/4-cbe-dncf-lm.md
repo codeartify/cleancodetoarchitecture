@@ -1,4 +1,13 @@
-# Long Functions with Deeply-Nested Control Flow and Complicated Boolean Expressions
+# How to get started with engineering?
+
+----
+# Look for code smells!
+
+----
+# What code smells to look for?  
+* Long function
+* Deeply nested control flow
+* Complicated boolean expression
 
 ----
 
