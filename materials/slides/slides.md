@@ -25,4 +25,8 @@ paginate: true
 #include "slides/6-dc-fe.md"
 
 ---
+
+#include "slides/7-loop-split.md"
+
+---
  
