@@ -29,4 +29,8 @@ paginate: true
 #include "slides/7-loop-split.md"
 
 ---
+
+#include "slides/8-concerns.md"
+
+---
  
