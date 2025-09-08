@@ -18,7 +18,7 @@ paginate: true
 
 ---
  
-#include "slides/5-lpl-po-dc-dc-fe.md"
+#include "slides/5-lpl-po-dc-dc.md"
 
 ---
  

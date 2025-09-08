@@ -26,9 +26,17 @@
 
 Introduce wrapper classes for primitive types in ```Controller```.
 
+----
+
 ## Possible abstractions
 * Location(x, y)
 * RealEstate / Property (id, Location)
 * RealEstateSearch(Location, SearchRadius)
- 
-### Run tests after each reasonably small refactoring step! 
+
+## Possible Refactorings
+* Extract Parameter
+* Introduce Parameter Object
+
+### Run tests after each reasonably small refactoring step!
+
+----
