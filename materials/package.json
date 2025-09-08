@@ -1,0 +1,12 @@
+{
+  "scripts": {
+    "slides:build": "markdown-include markdown.json",
+    "slides:preview": "npm run slides:build && marp slides/combined.md --html --allow-local-files --preview",
+    "slides:brave": "npm run slides:preview && open -a 'Brave Browser' slides/combined.html",
+    "slides:pdf": "npm run slides:build && marp slides/combined.md -o slides/slides.pdf --allow-local-files"
+  },
+  "devDependencies": {
+    "@marp-team/marp-cli": "^3.4.0",
+    "markdown-include": "^0.4.3"
+  }
+}
