@@ -1,0 +1,4 @@
+{
+  "build": "slides/combined.md",
+  "files": ["slides/slides.md"]
+}
