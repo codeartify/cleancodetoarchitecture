@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-commit=21aba6ed72fafca9b46e8caa73f9199cfdbd3c8f
+commit=01c9edfbe4c55ab2e545628fbc46dae04fbf4876
 source_branch=main
 
 git fetch --all
