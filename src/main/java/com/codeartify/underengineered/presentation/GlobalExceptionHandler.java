@@ -1,4 +1,4 @@
-package com.codeartify.underengineered.adapter.presentation;
+package com.codeartify.underengineered.presentation;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;

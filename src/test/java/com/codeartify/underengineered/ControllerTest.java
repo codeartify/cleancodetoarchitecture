@@ -1,8 +1,8 @@
 package com.codeartify.underengineered;
 
-import com.codeartify.underengineered.adapter.data_access.RealEstateRepository;
-import com.codeartify.underengineered.adapter.presentation.RealEstateSearchController;
-import com.codeartify.underengineered.adapter.presentation.Response;
+import com.codeartify.underengineered.data_access.RealEstateRepository;
+import com.codeartify.underengineered.presentation.RealEstateSearchController;
+import com.codeartify.underengineered.presentation.Response;
 import com.codeartify.underengineered.application.RealEstateSearchService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,7 +1,7 @@
 package com.codeartify.underengineered.application;
 
 import com.codeartify.underengineered.domain.Search;
-import com.codeartify.underengineered.adapter.data_access.RealEstateRepository;
+import com.codeartify.underengineered.data_access.RealEstateRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

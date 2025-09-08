@@ -1,4 +1,4 @@
-package com.codeartify.underengineered.adapter.presentation;
+package com.codeartify.underengineered.presentation;
 
 
 import com.codeartify.underengineered.application.RealEstateSearchService;

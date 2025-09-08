@@ -1,4 +1,4 @@
-package com.codeartify.underengineered.adapter.data_access;
+package com.codeartify.underengineered.data_access;
 
 import com.codeartify.underengineered.domain.Location;
 import com.codeartify.underengineered.domain.RealEstate;
