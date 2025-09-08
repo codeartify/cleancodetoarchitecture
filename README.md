@@ -21,11 +21,14 @@ Workshop repository for the Clean Code to Modern Architecture Design Patterns wo
 - No need to install Maven manually (Maven Wrapper included)
 
 ## Build
-
-Linux/macOS:bash ./mvnw clean package
+Linux/macOS:bash
+  ```bash
+  ./mvnw clean package
+  ```
 Windows:
-bash mvnw.cmd clean package
-
+  ```bash
+  mvnw.cmd clean package
+  ```
 ## Run
 
 This project contains two Spring Boot entry points (one for underengineered, one for overengineered). 
