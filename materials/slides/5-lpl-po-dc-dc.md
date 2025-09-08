@@ -17,8 +17,10 @@
 # What code smells to look for?
 * Long Parameter List
 * Primitive Obsession
+* Data Clumps
+----
 
-# Exercise Long Parameter List, Primitive Obsession
+# Exercise Long Parameter List, Primitive Obsession, Data Clumps
 
 > Exercise branch: **2-complicated-boolean-expression**
 >
@@ -38,5 +40,3 @@ Introduce wrapper classes for primitive types in ```Controller```.
 * Introduce Parameter Object
 
 ### Run tests after each reasonably small refactoring step!
-
-----
