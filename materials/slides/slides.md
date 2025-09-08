@@ -21,4 +21,8 @@ paginate: true
 #include "slides/5-lpl-po-dc-dc.md"
 
 ---
+
+#include "slides/6-dc-fe.md"
+
+---
  
