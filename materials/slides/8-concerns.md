@@ -4,12 +4,38 @@
 # What about architectural design patterns?
 
 ----
-# Layered Architecture 
+# Layered Architecture (DDD style)
 * Presentation Layer
 * Business Layer
   * Sometimes, the business layer additionally gets divided into application and domain layers.
-* Data Layer 
+* Data Access Layer
 
+----
+# Presentation Layer
+* Receives (and validates) user input
+* Calls business logic through "application services"
+* May or may not access domain objects directly
+* Presents results to the user
+* Maps data structures from application services to presentation layer
+
+----
+# Data access layer
+* Handles data access (DB, file system, REST APIs, etc.)
+* Called from application services
+* May or may not access domain objects directly
+* Does not access the presentation layer directly
+
+----
+# Application Layer
+* Coordinates the "dance of domain objects"
+* Fetches data from the data access, executes building blocks, and updates the data access
+* May or may not access domain objects directly
+* Does not access the presentation layer directly
+* 
+----
+# Domain Layer
+* Core business logic
+* Depending on the pattern used, often no access to any other layer
 
 ----
 # Exercise - Concern Separation
@@ -165,3 +191,14 @@ public Payment processPayment(Payment payment) {
     return paymentRepository.save(updatedPayment);
 }
 ```
+
+----
+# Exercise Layered Architecture
+> Exercise branch: **5-loop-split**
+> Solution branch: **6-separation-of-concerns**
+
+Separate presentation, application, domain, and data concerns.
+Move them to folders with respective names.
+Introduce application services where appropriate.
+ 
+### Run tests after each reasonably small refactoring step!
