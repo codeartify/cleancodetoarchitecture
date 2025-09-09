@@ -33,4 +33,12 @@ paginate: true
 #include "slides/8-concerns.md"
 
 ---
+
+#include "slides/9-hexagonal-architecture.md"
+
+---
+
+#include "slides/10-overengineering.md"
+
+---
  
