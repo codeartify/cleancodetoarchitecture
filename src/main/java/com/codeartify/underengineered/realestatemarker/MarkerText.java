@@ -1,15 +1,9 @@
 package com.codeartify.underengineered.realestatemarker;
 
 import com.codeartify.underengineered.domain.Price;
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonValue;
 
-@Getter
-public class MarkerText {
-    private final String markerText;
-
-    private MarkerText(String markerText) {
-        this.markerText = markerText;
-    }
+public record MarkerText(@JsonValue String value) {
 
     public static MarkerText from(String seller, String address, Double price) {
         if (seller == null || seller.trim().isEmpty()) {
@@ -23,7 +17,7 @@ public class MarkerText {
         }
 
         String markerTextString = "Seller: " + seller + "\n" +
-                 address + "\n" +
+                address + "\n" +
                 "Price: " + new Price(price).toAmericanFormat();
 
         return new MarkerText(markerTextString);
