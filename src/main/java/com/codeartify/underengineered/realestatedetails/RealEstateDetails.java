@@ -17,7 +17,7 @@ public record RealEstateDetails(String detailsText) {
         var americanLocalPhone = new Phone(contactPhone).toAmericanFormat();
         var americanLocalMoveInDate = new EarliestMoveInDate(earliestMoveInDate).toAmericanFormat();
 
-        return new RealEstateDetails("%s\nPhone: %s\nEmail: %s\nEarliest move-in date: %s"
+        return new RealEstateDetails("%s<br/>Phone: %s<br/>Email: %s<br/>Earliest move-in date: %s"
                 .formatted(seller, americanLocalPhone, contactEmail, americanLocalMoveInDate));
     }
 

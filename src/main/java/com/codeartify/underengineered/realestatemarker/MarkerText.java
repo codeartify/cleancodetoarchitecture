@@ -16,9 +16,7 @@ public record MarkerText(@JsonValue String value) {
             throw new RuntimeException("Price missing");
         }
 
-        String markerTextString = "Seller: " + seller + "\n" +
-                address + "\n" +
-                "Price: " + new Price(price).toAmericanFormat();
+        String markerTextString = "Seller: %s<br/>%s<br/>Price: %s".formatted(seller, address, new Price(price).toAmericanFormat());
 
         return new MarkerText(markerTextString);
     }
