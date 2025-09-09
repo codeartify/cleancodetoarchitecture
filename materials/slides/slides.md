@@ -42,3 +42,13 @@ paginate: true
 
 ---
  
+
+#include "slides/11-vertical.md"
+
+---
+ 
+
+#include "slides/12-outro.md"
+
+---
+ 
