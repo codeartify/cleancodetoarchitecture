@@ -4,21 +4,24 @@
 # What else could be improved?
 
 ----
-# Real Estate objects creation and search containment are two different concerns...
-And for better maintainability, they should be separated.
+# Real Estate objects creation and search for containment are two different concerns...
+And for better maintainability, they could be separated.
  
 ----
-# Exercise Concern Separation through Loop Splitting
+# Exercise: Concern Separation through Loop Splitting
 > Exercise branch: **4-feature-envy**
 > Solution branch: **5-loop-split**
 
-RealEstate objects should be created and fetched from a RealEstateRepository::fetchAll() method.
-This means that the loop over xCoords should be split into creation of RealEstate objects and actual check for containment in the search.
-
-## Loop Splitting
-* Create a list of objects in the first loop 
-* Iterate over it in all the following loops and check for containment 
-
-### Run tests after each reasonably small refactoring step!
+- RealEstate objects could be fetched from a ```RealEstateRepository```.
+- The simplest version could have a ```fetchAll():List<RealEstate>``` method.
+- To do so, the loop over xCoords should be split into
+  1. creation of RealEstate objects and 
+  2. actual check for containment in the search.
 
 ----
+## Refactoring: Loop Splitting
+* Create a list of objects in the first loop 
+* Iterate over it in all the following loops
+
+We can split a loop with multiple responsibilities into multiple loops and extract methods for each with intention-revealing names.
+
