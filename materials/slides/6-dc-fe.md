@@ -15,7 +15,7 @@
 
 ----
 # Emerging Software Design Algorithm (extended)
-* Separate responsibilities within the method 
+* Separate responsibilities within the method (we'll do that later, too)
 * Extract private method 
 * Remove direct access to non required fields of the old class 
 * Wrap target state with domain-specific class 
@@ -38,8 +38,6 @@ Move methods and logic closer to their types!
 What makes sense from a domain perspective?
 
 ## Possible Refactorings
-* Move method
+- Move method
 
 ### Run tests after each reasonably small refactoring step!
-
-----

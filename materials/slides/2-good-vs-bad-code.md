@@ -42,5 +42,124 @@
 - **Accidental complexity**: avoid it as much as possible
 
 ---
-# Exercise
+# Exercise - Accidental or Essential Complexity?
 
+<div style="
+  width: 50%;
+  margin: 2em auto;
+  background: #fffcc0;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-size: 0.9em;
+  text-align: left;
+">
+Using GoF design patterns in business software
+</div>
+
+---
+<div style="
+  width: 50%;
+  margin: 2em auto;
+  background: #fffcc0;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-size: 0.9em;
+  text-align: left;
+">
+Ensuring architectural integrity using tools like ArchUnit
+</div>
+
+---
+<div style="
+  width: 50%;
+  margin: 2em auto;
+  background: #fffcc0;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-size: 0.9em;
+  text-align: left;
+">
+Using Jeff's functional Java library (he's the lead developer)
+</div>
+
+---
+<div style="
+  width: 50%;
+  margin: 2em auto;
+  background: #fffcc0;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-size: 0.9em;
+  text-align: left;
+">
+Using Event Sourcing to create custom views
+</div>
+
+---
+<div style="
+  width: 50%;
+  margin: 2em auto;
+  background: #fffcc0;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-size: 0.9em;
+  text-align: left;
+">
+Backend and Frontend of the same application are developed by different teams or subteams
+</div>
+
+---
+<div style="
+  width: 50%;
+  margin: 2em auto;
+  background: #fffcc0;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-size: 0.9em;
+  text-align: left;
+">
+Having an interface for every service (e.g. CustomerService implements ICustomerService)
+</div>
+
+---
+<div style="
+  width: 50%;
+  margin: 2em auto;
+  background: #fffcc0;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-size: 0.9em;
+  text-align: left;
+">
+Every new feature is a new micro service - no need to refactor, just rewrite it.
+</div>
+
+---
+<div style="
+  width: 50%;
+  margin: 2em auto;
+  background: #fffcc0;
+  padding: 1em;
+  border-radius: 0.5em;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+  font-size: 0.9em;
+  text-align: left;
+">
+Every person in a team has a clear role and follows the established process.
+</div>
+ 
+----
+ 
+# Conclusion
+
+- It always depends on the context.
+- Some cases or more obvious than others, but that's what the "gap of the unknown" implies.
+- It can change over time.
+- We need to think in trade offs instead of absolute truths.

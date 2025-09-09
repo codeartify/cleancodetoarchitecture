@@ -1,7 +1,7 @@
 # Can we always just move logic to other classes (Feature Envy)?
 
 ----
-# What about architectural design patterns?
+# What about different concerns? 
 
 ----
 # Layered Architecture (DDD style)
@@ -11,38 +11,29 @@
 * Data Access Layer
 
 ----
-# Presentation Layer
-* Receives (and validates) user input
-* Calls business logic through "application services"
-* May or may not access domain objects directly
-* Presents results to the user
-* Maps data structures from application services to presentation layer
-
-----
-# Data access layer
-* Handles data access (DB, file system, REST APIs, etc.)
-* Called from application services
-* May or may not access domain objects directly
-* Does not access the presentation layer directly
+# Domain Layer
+* Core business logic
+* Often company-wide business rules that could be reused in multiple applications (e.g. "PhoneNumber", "Email")
 
 ----
 # Application Layer
 * Coordinates the "dance of domain objects"
-* Fetches data from the data access, executes building blocks, and updates the data access
-* May or may not access domain objects directly
-* Does not access the presentation layer directly
-* 
+* Fetches data from the data access, executes business logic through domain objects, and updates the data access
+
 ----
-# Domain Layer
-* Core business logic
-* Depending on the pattern used, often no access to any other layer
+# Presentation Layer
+* Receives (and validates) user input
+* Calls business logic through "application services"
+* Presents results to the user
+
+----
+# Data access layer
+* Handles data access (DB, file system, REST APIs, etc.)
 
 ----
 # Exercise - Concern Separation
 
 ----
-
-# Find Book by Title
 
 ```java
 public Book findBookByTitle(String title) throws SQLException {
@@ -63,13 +54,12 @@ public Book findBookByTitle(String title) throws SQLException {
 ```
 
 ---
-# Borrow Book
 
 ```java
 public boolean borrowBook(String bookTitle, String memberId) {
-    Book book = findBookByTitle(bookTitle);
+    Book book = booksRepository.findBookByTitle(bookTitle);
     if (book != null && !book.isBorrowed()) {
-        Member member = findMemberById(memberId);
+        Member member = memberRepository.findMemberById(memberId);
         if (member != null) {
             book.setBorrowed(true);
             return true;
@@ -80,7 +70,6 @@ public boolean borrowBook(String bookTitle, String memberId) {
 ```
 
 ---
-# Borrow Book (Controller)
 
 ```java
 @PostMapping("/book/borrow")
@@ -95,14 +84,12 @@ public String borrowBook(@RequestParam String title, @RequestParam int memberId,
 ```
 
 ---
-# Course Repository Interface
 
 ```java
 public interface CourseRepository extends JpaRepository<Course, Long> {}
 ```
 
 ---
-# Enroll Student in Course
 
 ```java
 public boolean enrollStudentInCourse(Long studentId, Long courseId) {
@@ -121,7 +108,6 @@ public boolean enrollStudentInCourse(Long studentId, Long courseId) {
 ```
 
 ---
-#  Enrollment
 
 ```java
 @KafkaListener(topics = "enroll-student-topic", groupId = "university-group")
@@ -137,39 +123,35 @@ public void handleEnrollStudent(EnrollmentRequest enrollmentRequest) {
         enrollmentRequest.getCourseId());
 }
 ```
-
 ---
-# Enroll Student
 
 ```java
-@PayloadRoot(namespace = NAMESPACE_URI, localPart = "EnrollStudentRequest")
-@ResponsePayload
-public EnrollStudentResponse enrollStudent(@RequestPayload EnrollStudentRequest request) {
-    enrollmentService.enrollStudent(request.getStudentId(), request.getCourseId());
+public Payment createPayment(Payment payment) {
+    ResponseEntity<Payment> response =
+            restTemplate.postForEntity(paymentServiceUrl + "/payments", payment, Payment.class);
+    return response.getBody();
+}
 
-    EnrollStudentResponse response = new EnrollStudentResponse();
-    response.setStatus("Success");
-    return response;
+```
+
+---
+
+```java
+public void sendPayment(Payment payment) {
+    PaymentDTO paymentDTO = new PaymentDTO(
+            payment.getId(),
+            payment.getAmount(),
+            payment.getCurrency(),
+            payment.getPaymentMethod(),
+            payment.getStatus(),
+            payment.getTransactionFee()
+    );
+    
+    kafkaTemplate.send(PAYMENT_TOPIC, paymentDTO);
 }
 ```
 
 ---
-# Create Payment
-
-```java
-@PostMapping
-public ResponseEntity<Payment> createPayment(@RequestBody PaymentRequest paymentRequest) {
-    try {
-        Payment payment = paymentService.processPayment(paymentRequest);
-        return new ResponseEntity<>(payment, HttpStatus.CREATED);
-    } catch (IllegalArgumentException e) {
-        return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-    }
-}
-```
-
----
-# Process Payment
 
 ```java
 public Payment processPayment(Payment payment) {
@@ -189,6 +171,21 @@ public Payment processPayment(Payment payment) {
     updatedPayment.setId(payment.getId());
 
     return paymentRepository.save(updatedPayment);
+}
+```
+---
+
+```java
+private void validate() {
+    if (amount <= 0) {
+        throw new IllegalArgumentException("Payment amount must be greater than zero.");
+    }
+    if (currency == null || currency.isEmpty()) {
+        throw new IllegalArgumentException("Currency cannot be null or empty.");
+    }
+    if (paymentMethod == null || paymentMethod.isEmpty()) {
+        throw new IllegalArgumentException("Payment method cannot be null or empty.");
+    }
 }
 ```
 
